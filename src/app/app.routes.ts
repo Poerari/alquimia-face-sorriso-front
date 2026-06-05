@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { Consultas } from './pages/consultas/consultas';
+import { ConsultasComponent } from './pages/consultas/consultas';
 import { Pacientes } from './pages/pacientes/pacientes';
 import { Dentistas } from './pages/dentistas/dentistas';
 import { Dashboard } from './pages/dashboard/dashboard';
@@ -10,7 +10,7 @@ import { Usuarios } from './pages/usuarios/usuarios';
 import { Login } from './pages/login/login';
 
 export const routes: Routes = [
-  { path: 'consultas', component: Consultas },
+  { path: 'consultas', component: ConsultasComponent },
   { path: 'pacientes', component: Pacientes },
   { path: 'dentistas', component: Dentistas },
   { path: 'dashboard', component: Dashboard },

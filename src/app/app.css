@@ -4,12 +4,20 @@
     box-sizing: border-box;
 }
 
+.topbar {
+    color: #FFF59D;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 20px;
+}
+
 .container-principal {
     display: flex;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
 }
+
 
 .menu-lateral {
     width: 280px;
@@ -23,9 +31,9 @@
 a {
     text-decoration: none;
     color: #A0AEC0;
-    padding: 10px 20px;
+    padding: 14px 20px;
     border-radius: 12px;
-    transition: background 0.2s ease;
+    font-weight: 500;
 }
 
 a:hover {
@@ -34,8 +42,9 @@ a:hover {
 }
 
 .ativo {
-    background-color: #013C58;
-    color: #F4F6F8 !important;
+    background-color: #FFF59D;
+    color: #2D3748 !important;
+     font-weight: 600;
 
 }
 

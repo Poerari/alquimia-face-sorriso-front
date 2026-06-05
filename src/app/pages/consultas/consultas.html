@@ -1,1 +1,52 @@
-<p>consultas works!</p>
+<div class="pagina">
+
+  <div class="cabecalho-pagina">
+    <h1>Consultas</h1>
+
+    <button class="btn-nova">
+      Nova Consulta
+    </button>
+  </div>
+
+  <div class="card-tabela">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Paciente</th>
+          <th>Dentista</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let consulta of consultas">
+
+          <td>{{ consulta.id }}</td>
+
+          <td>
+            {{ consulta.paciente?.nome }}
+          </td>
+
+          <td>
+            {{ consulta.dentista?.nome }}
+          </td>
+
+          <td>
+            <span class="status">
+              {{ consulta.status }}
+            </span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

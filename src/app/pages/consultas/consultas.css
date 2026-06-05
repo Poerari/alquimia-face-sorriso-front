@@ -1,0 +1,67 @@
+.pagina {
+    width: 100%;
+}
+
+.cabecalho-pagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.cabecalho-pagina h1 {
+    color: #2D3748;
+}
+
+.btn-nova {
+    background-color: #FFF59D;
+    color: #2D3748;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-nova:hover {
+    opacity: 0.9;
+}
+
+.card-tabela {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #FFF59D;
+}
+
+th {
+    text-align: left;
+    padding: 15px;
+    color: #013C58;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+tr:hover {
+    background-color: #F8FAFC;
+}
+
+.status {
+    background-color: #FFF59D;
+    color: #013C58;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
