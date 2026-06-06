@@ -11,7 +11,7 @@ import { ConsultaService } from '../../services/consulta';
   templateUrl: './consultas.html',
   styleUrl: './consultas.css'
 })
-export class ConsultasComponent implements OnInit {
+export class Consultas implements OnInit {
 
   consultas: Consulta[] = [];
 

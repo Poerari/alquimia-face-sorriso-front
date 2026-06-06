@@ -1,23 +1,81 @@
-<h1>Pacientes</h1>
+<div class="pagina">
 
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nome</th>
-      <th>CPF</th>
-      <th>Email</th>
-      <th>Telefone</th>
-    </tr>
-  </thead>
+  <div class="cabecalho-pagina">
+    <input type="text" placeholder="Pesquisar..." [(ngModel)]="filtro" class="input-pesquisa">
 
-  <tbody>
-    <tr *ngFor="let paciente of pacientes">
-      <td>{{ paciente.id }}</td>
-      <td>{{ paciente.nome }}</td>
-      <td>{{ paciente.cpf }}</td>
-      <td>{{ paciente.email }}</td>
-      <td>{{ paciente.telefone }}</td>
-    </tr>
-  </tbody>
-</table>
+    <h1>Pacientes</h1>
+
+    <div class="cards">
+      <div class="card-resumo">
+        <h3>Total de Pacientes</h3>
+        <span>{{ pacientesFiltrados.length }}</span>
+      </div>
+    </div>
+
+    <button type="button" class="btn-novo"
+     (click)="abrirFormulario()">
+     Novo Paciente
+    </button>
+
+    @if (mostrarFormulario) {
+    <div class="overlay">
+      <div class="modal">
+        <h2>{{ modoEdicao ? 'Editar Paciente' : 'Novo Paciente' }}</h2>
+
+        <input type="text" placeholder="Nome" [(ngModel)]="pacienteNovo.nome">
+        <input type="text" placeholder="CPF" [(ngModel)]="pacienteNovo.cpf">
+        <input type="text" placeholder="Email" [(ngModel)]="pacienteNovo.email">
+        <input type="text" placeholder="Telefone" [(ngModel)]="pacienteNovo.telefone">
+
+        <div class="acoes-modal">
+          <button class="btn-salvar" (click)="salvarPaciente()">
+            Salvar
+          </button>
+          <button class="btn-cancelar" (click)="fecharFormulario()">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="card-tabela">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (paciente of pacientesFiltrados; track paciente.id) {
+        <tr>
+          <td>{{ paciente?.id }}</td>
+          <td>{{ paciente?.nome }}</td>
+          <td>{{ paciente?.cpf }}</td>
+          <td>{{ paciente?.email }}</td>
+          <td>{{ paciente?.telefone }}</td>
+          <td>
+            <button class="btn-editar" (click)="editarPaciente(paciente)">
+              Editar
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 20px;">
+            Nenhum paciente encontrado.
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>

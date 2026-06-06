@@ -16,4 +16,19 @@ export class PacienteService {
   listar(): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(this.api);
   }
+
+  excluir(id: number): Observable<void> {
+  return this.http.delete<void>(
+    `${this.api}/${id}`
+  );
+}
+
+  cadastrar(paciente: Paciente): Observable<Paciente> {
+
+    return this.http.post<Paciente>(
+      this.api,
+      paciente
+    );
+
+}
 }
