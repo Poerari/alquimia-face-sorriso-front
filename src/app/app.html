@@ -1,15 +1,21 @@
 <div class="container-principal">
 
+  
+
   <aside class="menu-lateral">
 
-     <header class="topbar">
-      <h2>Sistema de Gestão de Consultas</h2>
-     </header>
+  <div class="logo-container">
 
-
-    <h2 class="logo">
+  <h1 class="logo">
     Alquimia
-    </h2>
+  </h1>
+
+  <span class="subtitulo-logo">
+    Face & Sorriso
+  </span>
+
+</div>
+
 
     <a routerLink="/dashboard" routerLinkActive="ativo">
       Dashboard
@@ -41,6 +47,19 @@
     
   </aside>
   <main class="conteudo-principal">
+    <div class="topbar">
+
+     <input
+      type="text"
+      placeholder="Pesquisar..."
+      class="campo-busca"
+    />
+
+    <div class="usuario">
+      Gabriela
+    </div>
+
+    </div>
     <router-outlet></router-outlet>
 
   </main>

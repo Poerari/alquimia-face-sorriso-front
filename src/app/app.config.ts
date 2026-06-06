@@ -8,9 +8,8 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
-    provideClientHydration(),
-    provideHttpClient()
-  ]
+  provideBrowserGlobalErrorListeners(),
+  provideRouter(routes),
+  provideHttpClient()
+]
 };

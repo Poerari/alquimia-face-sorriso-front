@@ -10,10 +10,25 @@
 }
 
 .card {
-    background:#FFF59D;
+
+    background: #FFF59D;
+
+    border-radius: 18px;
+
     padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+    min-height: 150px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+
+    transition: .2s;
+
+}
+
+.card:hover {
+
+    transform: translateY(-8px);
+
 }
 
 .card h3 {
@@ -24,7 +39,101 @@
 .card span {
     display: block;
     margin-top: 10px;
-    font-size: 32px;
+    font-size: 42px;
     font-weight: bold;
     color: #2D3748;
+}
+
+.secao-dashboard {
+
+    margin-top: 40px;
+
+}
+
+.cabecalho-secao {
+
+    margin-bottom: 20px;
+
+}
+
+.cabecalho-secao h2 {
+
+    font-size: 24px;
+
+    color: #2D3748;
+
+}
+
+.card-tabela {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+thead {
+
+    background: #FFF59D;
+
+}
+
+th {
+
+    padding: 15px;
+
+    text-align: left;
+
+    color: #2D3748;
+
+}
+
+td {
+
+    padding: 15px;
+
+    border-bottom: 1px solid #E2E8F0;
+
+}
+
+tbody tr:hover {
+
+    background: #FFFDE7;
+
+}
+
+.status {
+
+    background: #FFF59D;
+
+    padding: 8px 15px;
+
+    border-radius: 20px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+td, th {
+  padding: 15px;
 }

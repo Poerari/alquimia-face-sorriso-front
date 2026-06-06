@@ -1,17 +1,14 @@
 <div class="pagina">
 
+  <div class="pagina">
+
   <div class="cabecalho-pagina">
     <h1>Consultas</h1>
-
-    <button class="btn-nova">
-      Nova Consulta
-    </button>
+    <button class="btn-nova">Nova Consulta</button>
   </div>
 
   <div class="card-tabela">
-
     <table>
-
       <thead>
         <tr>
           <th>ID</th>
@@ -20,33 +17,29 @@
           <th>Status</th>
         </tr>
       </thead>
-
       <tbody>
-
-        <tr *ngFor="let consulta of consultas">
-
-          <td>{{ consulta.id }}</td>
-
-          <td>
-            {{ consulta.paciente?.nome }}
-          </td>
-
-          <td>
-            {{ consulta.dentista?.nome }}
-          </td>
-
-          <td>
-            <span class="status">
-              {{ consulta.status }}
-            </span>
-          </td>
-
-        </tr>
-
+        @for (consulta of consultas; track consulta.id) {
+          <tr>
+            <td>{{ consulta.id }}</td>
+            <td>{{ consulta.paciente?.nome }}</td>
+            <td>{{ consulta.dentista?.nome }}</td>
+            <td>
+              <span class="status">
+                {{ consulta.status }}
+              </span>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" style="text-align: center; padding: 20px;">
+              Nenhuma consulta encontrada na lista.
+            </td>
+          </tr>
+        }
       </tbody>
-
     </table>
-
   </div>
+
+</div>
 
 </div>
