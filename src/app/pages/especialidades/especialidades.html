@@ -1,1 +1,128 @@
-<p>especialidades works!</p>
+<div class="pagina">
+
+  <div class="cards-topo">
+
+    <div class="card-topo">
+      <h3>Especialidades Odontológicas</h3>
+      
+    </div>
+
+    <div class="card-topo">
+      <h3>Total de Especialidades</h3>
+      <span>{{ especialidades.length }}</span>
+    </div>
+
+    <div class="card-topo card-acao">
+
+      <button
+        class="btn-novo"
+        (click)="abrirFormulario()">
+
+        + Nova Especialidade
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card-tabela">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        @for (
+          especialidade of especialidades;
+          track especialidade.id
+        ) {
+
+          <tr>
+
+            <td>{{ especialidade.id }}</td>
+
+            <td>{{ especialidade.nome }}</td>
+
+            <td>
+
+              <button
+                class="btn-editar"
+                (click)="editarEspecialidade(
+                  especialidade
+                )">
+
+                Editar
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  @if (mostrarFormulario) {
+
+    <div class="overlay">
+
+      <div class="modal">
+
+        <h2>
+
+          {{
+            modoEdicao
+            ? 'Editar Especialidade'
+            : 'Nova Especialidade'
+          }}
+
+        </h2>
+
+        <input
+          type="text"
+          placeholder="Nome"
+          [(ngModel)]="especialidadeNova.nome"
+        >
+
+        <div class="acoes-modal">
+
+          <button
+            class="btn-salvar"
+            (click)="salvarEspecialidade()">
+
+            Salvar
+
+          </button>
+
+          <button
+            class="btn-cancelar"
+            (click)="fecharFormulario()">
+
+            Cancelar
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

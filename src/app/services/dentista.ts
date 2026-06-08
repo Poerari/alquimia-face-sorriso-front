@@ -14,6 +14,20 @@ export class DentistaService {
   constructor(private http: HttpClient) {}
 
   listar(): Observable<Dentista[]> {
-    return this.http.get<Dentista[]>(this.api);
-  }
+  return this.http.get<Dentista[]>(this.api);
+}
+
+cadastrar(dentista: Dentista): Observable<Dentista> {
+  return this.http.post<Dentista>(
+    this.api,
+    dentista
+  );
+}
+
+atualizar(id: number, dentista: Dentista) {
+  return this.http.put<Dentista>(
+    `${this.api}/${id}`,
+    dentista
+  );
+}
 }

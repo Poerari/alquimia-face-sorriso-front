@@ -1,1 +1,159 @@
-<p>dentistas works!</p>
+<div class="pagina">
+
+  <div class="cards-topo">
+
+    <div class="card-topo">
+      <h3>Dentistas</h3>
+       <h3>Gestão da Equipe</h3>
+    </div>
+
+    <div class="card-topo">
+      <h3>Total de Dentistas</h3>
+      <span>{{ dentistas.length }}</span>
+    </div>
+
+    <div class="card-topo card-acao">
+
+      <button
+        class="btn-novo"
+        (click)="abrirFormulario()">
+
+        + Novo Dentista
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card-tabela">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>CRO</th>
+          <th>CPF</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        @for (dentista of dentistas; track dentista.id) {
+
+          <tr>
+
+            <td>{{ dentista?.id }}</td>
+            <td>{{ dentista?.nome }}</td>
+            <td>{{ dentista?.cro }}</td>
+            <td>{{ dentista?.cpf }}</td>
+            <td>{{ dentista?.email }}</td>
+
+            <td>
+
+              @if (dentista.ativo) {
+
+                <span class="status">
+                  Ativo
+                </span>
+
+              } @else {
+
+                <span class="status-inativo">
+                  Inativo
+                </span>
+
+              }
+
+            </td>
+
+            <td>
+
+              <button
+                class="btn-editar"
+                (click)="editarDentista(dentista)">
+
+                Editar
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  @if (mostrarFormulario) {
+
+    <div class="overlay">
+
+      <div class="modal">
+
+        <h2>
+        {{ modoEdicao ? 'Editar Dentista' : 'Novo Dentista' }}
+        </h2>
+
+        <input
+          type="text"
+          placeholder="Nome"
+          [(ngModel)]="dentistaNovo.nome"
+        >
+
+        <input
+          type="text"
+          placeholder="CPF"
+          [(ngModel)]="dentistaNovo.cpf"
+        >
+
+        <input
+          type="text"
+          placeholder="CRO"
+          [(ngModel)]="dentistaNovo.cro"
+        >
+
+        <input
+          type="email"
+          placeholder="Email"
+          [(ngModel)]="dentistaNovo.email"
+        >
+
+        <div class="acoes-modal">
+
+          <button
+            class="btn-salvar"
+            (click)="salvarDentista()">
+
+            Salvar
+
+          </button>
+
+          <button
+            class="btn-cancelar"
+            (click)="fecharFormulario()">
+
+            Cancelar
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

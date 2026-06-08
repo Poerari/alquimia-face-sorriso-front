@@ -1,21 +1,27 @@
 <div class="pagina">
 
-  <div class="cabecalho-pagina">
-    <input type="text" placeholder="Pesquisar..." [(ngModel)]="filtro" class="input-pesquisa">
+  <div class="cards-topo">
 
-    <h1>Pacientes</h1>
+  <div class="card-topo">
+    <h3>Pacientes</h3>
+  </div>
 
-    <div class="cards">
-      <div class="card-resumo">
-        <h3>Total de Pacientes</h3>
-        <span>{{ pacientesFiltrados.length }}</span>
-      </div>
+  <div class="card-topo">
+      <h3>Total de Pacientes</h3>
+      <span>{{ pacientes.length }}</span>
     </div>
 
-    <button type="button" class="btn-novo"
-     (click)="abrirFormulario()">
-     Novo Paciente
+
+  <div class="card-topo card-acao">
+    <button
+      type="button"
+      class="btn-novo"
+      (click)="abrirFormulario()">
+
+      Novo Paciente
+
     </button>
+  </div>
 
     @if (mostrarFormulario) {
     <div class="overlay">

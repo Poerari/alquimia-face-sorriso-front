@@ -17,4 +17,23 @@ export class EspecialidadeService {
     return this.http.get<Especialidade[]>(this.api);
   }
 
+  cadastrar(especialidade: Especialidade): Observable<Especialidade> {
+    return this.http.post<Especialidade>(
+      this.api,
+      especialidade
+    );
+  }
+
+  atualizar(
+    id: number,
+    especialidade: Especialidade
+  ): Observable<Especialidade> {
+
+    return this.http.put<Especialidade>(
+      `${this.api}/${id}`,
+      especialidade
+    );
+
+  }
+
 }
