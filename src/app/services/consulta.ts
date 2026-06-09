@@ -15,4 +15,23 @@ export class ConsultaService {
   listar(): Observable<Consulta[]> {
     return this.http.get<Consulta[]>(this.api);
   }
+
+  cadastrar(consulta: any): Observable<any> {
+  return this.http.post<any>(
+    this.api,
+    consulta
+  );
+  }
+
+  atualizar(
+      id: number,
+      consulta: any
+  ): Observable<any> {
+
+    return this.http.put<any>(
+        `${this.api}/${id}`,
+        consulta
+      );
+
+    }
 }
