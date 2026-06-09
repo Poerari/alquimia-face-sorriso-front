@@ -5,13 +5,15 @@ export interface Consulta {
     dataInicio: string;
     dataFim: string;
 
-    paciente: {
+  paciente: {
+    id: number;
     nome: string;
-  };
+};
 
-  dentista: {
-    nome: string;
-  };
+dentista: {
+  id: number;
+  nome: string;
+};
 }
 
  

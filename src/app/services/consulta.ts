@@ -24,14 +24,21 @@ export class ConsultaService {
   }
 
   atualizar(
-      id: number,
-      consulta: any
-  ): Observable<any> {
+  id: number,
+  consulta: Consulta
+): Observable<Consulta> {
 
-    return this.http.put<any>(
-        `${this.api}/${id}`,
-        consulta
-      );
+  return this.http.put<Consulta>(
+    `${this.api}/${id}`,
+    consulta
+  );
+}
 
-    }
+excluir(id: number): Observable<void> {
+
+  return this.http.delete<void>(
+    `${this.api}/${id}`
+  );
+
+}
 }

@@ -23,12 +23,21 @@ export class PacienteService {
   );
 }
 
-  cadastrar(paciente: Paciente): Observable<Paciente> {
+ cadastrar(paciente: Paciente): Observable<Paciente> {
 
-    return this.http.post<Paciente>(
-      this.api,
-      paciente
-    );
+  return this.http.post<Paciente>(
+    this.api,
+    paciente
+  );
+
+}
+
+atualizar(id: number, paciente: Paciente) {
+
+  return this.http.put<Paciente>(
+    `${this.api}/${id}`,
+    paciente
+  );
 
 }
 }

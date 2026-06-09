@@ -91,6 +91,17 @@
 
               }
 
+            
+
+              @if (consulta.status === 'ATRASADA') {
+
+                <span class="status-atrasada">
+
+                  Atrasada
+
+                </span>
+              }
+
             </td>
 
             <td>
@@ -102,6 +113,15 @@
                 Editar
 
               </button>
+
+              <button
+              class="btn-excluir"
+              (click)="excluirConsulta(consulta.id)">
+
+              Excluir
+
+             </button>
+
 
             </td>
 
@@ -133,71 +153,63 @@
 
     <div class="modal">
 
-      <h2>Nova Consulta</h2>
+      <h2>{{ consultaNova.id ? 'Editar Consulta' : 'Nova Consulta' }}</h2>
 
-      <select [(ngModel)]="consultaNova.paciente.id">
-
-        <option [ngValue]="null">
-          Selecione o Paciente
-        </option>
-
-        <option
-          *ngFor="let paciente of pacientes"
-          [ngValue]="paciente.id">
-
+      <select [(ngModel)]="consultaNova.paciente.id" required>
+        <option [ngValue]="null">Selecione o Paciente</option>
+        <option *ngFor="let paciente of pacientes" [ngValue]="paciente.id">
           {{ paciente.nome }}
-
         </option>
-
       </select>
 
-      <select [(ngModel)]="consultaNova.dentista.id">
-
-        <option [ngValue]="null">
-          Selecione o Dentista
-        </option>
-
-        <option
-          *ngFor="let dentista of dentistas"
-          [ngValue]="dentista.id">
-
+      <select [(ngModel)]="consultaNova.dentista.id" required>
+        <option [ngValue]="null">Selecione o Dentista</option>
+        <option *ngFor="let dentista of dentistas" [ngValue]="dentista.id">
           {{ dentista.nome }}
-
         </option>
-
       </select>
 
+      <label for="dataInicio" style="font-size: 14px; color: #555; display: block; margin-top: 10px;">Data e Hora da Consulta:</label>
       <input
+        id="dataInicio"
         type="datetime-local"
-        [(ngModel)]="consultaNova.dataInicio">
-
-      <input
-        type="datetime-local"
-        [(ngModel)]="consultaNova.dataFim">
+        [(ngModel)]="consultaNova.dataInicio"
+        required>
 
       <input
         type="text"
         placeholder="Descrição"
         [(ngModel)]="consultaNova.descricao">
 
+        <div *ngIf="consultaNova.id">
+
+        <label>Status</label>
+
+        <select [(ngModel)]="consultaNova.status">
+
+          <option value="AGENDADA">
+            Agendada
+          </option>
+
+          <option value="CONCLUIDA">
+            Concluída
+          </option>
+
+          <option value="CANCELADA">
+            Cancelada
+          </option>
+
+        </select>
+
+      </div>
+
       <div class="acoes-modal">
-
-        <button
-          class="btn-salvar"
-          (click)="salvarConsulta()">
-
+        <button class="btn-salvar" (click)="salvarConsulta()">
           Salvar
-
         </button>
-
-        <button
-          class="btn-cancelar"
-          (click)="fecharFormulario()">
-
+        <button class="btn-cancelar" (click)="fecharFormulario()">
           Cancelar
-
         </button>
-
       </div>
 
     </div>

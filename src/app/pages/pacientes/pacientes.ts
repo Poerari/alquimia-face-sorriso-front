@@ -90,28 +90,93 @@ export class Pacientes implements OnInit {
     this.mostrarFormulario = true;
   }
 
-  salvarPaciente() {
-    
-    if (!this.pacienteNovo.nome || !this.pacienteNovo.cpf) {
-      console.warn('Nome e CPF são obrigatórios.');
-      return;
-    }
 
-    if (this.modoEdicao) {
-      
-    } else {
-      
-      this.pacienteService.cadastrar(this.pacienteNovo).subscribe({
-        next: (novoPaciente) => {
-          
-          this.pacientes = [...this.pacientes, novoPaciente]; 
-          this.fecharFormulario();
-          this.cdr.detectChanges();
-        },
-        error: (erro) => {
-          console.error('Erro ao cadastrar paciente', erro);
-        }
-      });
-    }
+  
+  
+
+ salvarPaciente() {
+
+  if (
+    !this.pacienteNovo.nome ||
+    !this.pacienteNovo.cpf
+  ) {
+
+    alert('Nome e CPF são obrigatórios.');
+
+    return;
+
   }
+
+  if (this.modoEdicao) {
+
+    this.pacienteService
+      .atualizar(
+        this.pacienteNovo.id,
+        this.pacienteNovo
+      )
+      .subscribe({
+
+        next: (pacienteAtualizado) => {
+
+          const index =
+            this.pacientes.findIndex(
+              p => p.id === pacienteAtualizado.id
+            );
+
+          if (index !== -1) {
+
+            this.pacientes[index] =
+              pacienteAtualizado;
+
+          }
+
+          this.fecharFormulario();
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (erro) => {
+
+          console.error(
+            'Erro ao atualizar paciente',
+            erro
+          );
+
+        }
+
+      });
+
+  } else {
+
+    this.pacienteService
+      .cadastrar(this.pacienteNovo)
+      .subscribe({
+
+        next: (novoPaciente) => {
+
+          this.pacientes.push(
+            novoPaciente
+          );
+
+          this.fecharFormulario();
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (erro) => {
+
+          console.error(
+            'Erro ao cadastrar paciente',
+            erro
+          );
+
+        }
+
+      });
+
+  }
+
+}
 }
