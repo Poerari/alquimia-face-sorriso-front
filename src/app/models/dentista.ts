@@ -1,3 +1,4 @@
+import { Especialidade } from './especialidade';
 export interface Dentista {
   id: number;
   nome: string;
@@ -5,4 +6,5 @@ export interface Dentista {
   cro: string;
   email: string;
   ativo: boolean;
+  especialidades?: Especialidade[];
 }

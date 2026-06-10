@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Especialidade } from '../../models/especialidade';
+import { EspecialidadeService } from '../../services/especialidade';
 
 import { Dentista } from '../../models/dentista';
 import { DentistaService } from '../../services/dentista';
@@ -24,16 +26,26 @@ export class Dentistas implements OnInit {
     cpf: '',
     cro: '',
     email: '',
-    ativo: true
+    ativo: true,
+    especialidades: []
   };
+
+  especialidades: Especialidade[] = [];
 
   constructor(
     private dentistaService: DentistaService,
+    private especialidadeService: EspecialidadeService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.carregarDentistas();
+
+  this.especialidadeService.listar().subscribe({
+    next: (dados) => {
+      this.especialidades = dados;
+    }
+  });
   }
 
   carregarDentistas() {
@@ -41,6 +53,8 @@ export class Dentistas implements OnInit {
     this.dentistaService.listar().subscribe({
 
       next: (dados) => {
+
+        console.log(dados);
 
         this.dentistas = dados;
         this.cdr.detectChanges();
@@ -69,7 +83,8 @@ export class Dentistas implements OnInit {
     cpf: '',
     cro: '',
     email: '',
-    ativo: true
+    ativo: true,
+    especialidades: []
   };
 
   this.mostrarFormulario = true;
@@ -81,16 +96,12 @@ export class Dentistas implements OnInit {
 
   }
 
-  editarDentista(dentista: Dentista) {
-
+editarDentista(dentista: Dentista) {
   this.modoEdicao = true;
-
-  this.dentistaNovo = {
-    ...dentista
-  };
+  this.dentistaNovo = JSON.parse(JSON.stringify(dentista));
 
   this.mostrarFormulario = true;
-
+  this.cdr.detectChanges(); 
 }
 
 salvarDentista() {
@@ -178,6 +189,32 @@ salvarDentista() {
       });
 
   }
+
+}
+
+toggleEspecialidade(especialidade: Especialidade) {
+  if (!this.dentistaNovo.especialidades) {
+    this.dentistaNovo.especialidades = [];
+  }
+
+  const index = this.dentistaNovo.especialidades.findIndex(
+    (e: any) => e.id === especialidade.id
+  );
+
+  if (index >= 0) {
+    this.dentistaNovo.especialidades.splice(index, 1);
+  } else {
+    this.dentistaNovo.especialidades.push(especialidade);
+  }
+
+  this.cdr.detectChanges(); 
+}
+
+  possuiEspecialidade(especialidadeId: number): boolean {
+
+  return this.dentistaNovo.especialidades?.some(
+    (e: any) => e.id === especialidadeId
+  ) || false;
 
 }
 }  

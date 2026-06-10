@@ -4,7 +4,6 @@
 
     <div class="card-topo">
       <h3>Dentistas</h3>
-       <h3>Gestão da Equipe</h3>
     </div>
 
     <div class="card-topo">
@@ -13,147 +12,146 @@
     </div>
 
     <div class="card-topo card-acao">
-
       <button
         class="btn-novo"
-        (click)="abrirFormulario()">
+        (click)="mostrarFormulario = true">
 
-        + Novo Dentista
+        Novo Dentista
 
       </button>
-
     </div>
 
   </div>
 
-  <div class="card-tabela">
 
-    <table>
-
-      <thead>
-
+<div class="card-tabela">
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CRO</th>
+        <th>Email</th>
+        <th>Especialidade</th> <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (dentista of dentistas; track dentista.id) {
         <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>CRO</th>
-          <th>CPF</th>
-          <th>Email</th>
-          <th>Status</th>
-          <th>Ações</th>
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        @for (dentista of dentistas; track dentista.id) {
-
-          <tr>
-
-            <td>{{ dentista?.id }}</td>
-            <td>{{ dentista?.nome }}</td>
-            <td>{{ dentista?.cro }}</td>
-            <td>{{ dentista?.cpf }}</td>
-            <td>{{ dentista?.email }}</td>
-
-            <td>
-
-              @if (dentista.ativo) {
-
-                <span class="status">
-                  Ativo
+          <td>{{ dentista.nome }}</td>
+          <td>{{ dentista.cro }}</td>
+          <td>{{ dentista.email }}</td>
+          
+          <td>
+            @if (dentista.especialidades?.length) {
+              @for (esp of dentista.especialidades; track esp.id) {
+                <span class="badge-especialidade">
+                  {{ esp.nome }}
                 </span>
-
-              } @else {
-
-                <span class="status-inativo">
-                  Inativo
-                </span>
-
               }
+            } @else {
+              <span class="sem-especialidade">
+                Nenhuma
+              </span>
+            }
+          </td>
 
-            </td>
+          <td>
+            <button class="btn-editar" (click)="editarDentista(dentista)">
+              Editar
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" style="text-align:center; color:#718096;">
+            Nenhum dentista encontrado.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
 
-            <td>
+</div>
 
-              <button
-                class="btn-editar"
-                (click)="editarDentista(dentista)">
+@if (mostrarFormulario) {
 
-                Editar
+  <div class="overlay">
 
-              </button>
+    <div class="modal">
 
-            </td>
+      <h2>
+        {{ modoEdicao ? 'Editar Dentista' : 'Novo Dentista' }}
+      </h2>
 
-          </tr>
+      <input
+        type="text"
+        placeholder="Nome"
+        [(ngModel)]="dentistaNovo.nome"
+      >
+
+      <input
+        type="text"
+        placeholder="CPF"
+        [(ngModel)]="dentistaNovo.cpf"
+      >
+
+      <input
+        type="text"
+        placeholder="CRO"
+        [(ngModel)]="dentistaNovo.cro"
+      >
+
+      <input
+        type="email"
+        placeholder="Email"
+        [(ngModel)]="dentistaNovo.email"
+      >
+
+      <h4>Especialidades</h4>
+
+      <div class="lista-especialidades">
+
+        @for (esp of especialidades; track esp.id) {
+
+          <label class="item-especialidade">
+
+            <input
+              type="checkbox"
+              [checked]="possuiEspecialidade(esp.id)"
+              (change)="toggleEspecialidade(esp)"
+            >
+
+            {{ esp.nome }}
+
+          </label>
 
         }
 
-      </tbody>
+      </div>
 
-    </table>
+      <div class="acoes-modal">
 
-  </div>
+        <button
+          class="btn-salvar"
+          (click)="salvarDentista()">
 
-  @if (mostrarFormulario) {
+          Salvar
 
-    <div class="overlay">
+        </button>
 
-      <div class="modal">
+        <button
+          class="btn-cancelar"
+          (click)="fecharFormulario()">
 
-        <h2>
-        {{ modoEdicao ? 'Editar Dentista' : 'Novo Dentista' }}
-        </h2>
+          Cancelar
 
-        <input
-          type="text"
-          placeholder="Nome"
-          [(ngModel)]="dentistaNovo.nome"
-        >
-
-        <input
-          type="text"
-          placeholder="CPF"
-          [(ngModel)]="dentistaNovo.cpf"
-        >
-
-        <input
-          type="text"
-          placeholder="CRO"
-          [(ngModel)]="dentistaNovo.cro"
-        >
-
-        <input
-          type="email"
-          placeholder="Email"
-          [(ngModel)]="dentistaNovo.email"
-        >
-
-        <div class="acoes-modal">
-
-          <button
-            class="btn-salvar"
-            (click)="salvarDentista()">
-
-            Salvar
-
-          </button>
-
-          <button
-            class="btn-cancelar"
-            (click)="fecharFormulario()">
-
-            Cancelar
-
-          </button>
-
-        </div>
+        </button>
 
       </div>
 
     </div>
 
-  }
+  </div>
 
-</div>
+}

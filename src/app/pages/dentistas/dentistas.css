@@ -184,12 +184,6 @@ tbody tr:hover {
 
 }
 
-.btn-editar:hover {
-
-    opacity: .40;
-
-}
-
 .overlay {
 
     position: fixed;
@@ -261,34 +255,24 @@ tbody tr:hover {
     gap: 10px;
 }
 
-.status {
 
-    background: #d3d3d3;
-
-    border: none;
-
-    padding: 12px 22px;
-
-    border-radius: 12px;
-
-    cursor: pointer;
-
+.badge-especialidade {
+    display: inline-block;
+    background-color: #E2E8F0; /* Cinza claro idêntico ao botão editar */
+    color: #4A5568;            /* Texto cinza escuro legível */
+    padding: 6px 12px;
+    border-radius: 8px;        /* Bordas arredondadas combinando com o sistema */
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
 }
 
-.status-inativo {
-
-    background: #FED7D7;
-
-    color: #742A2A;
-
-    padding: 8px 15px;
-
-    border-radius: 20px;
-
+/* Estilo discreto para quando o dentista não tiver especialidade */
+.sem-especialidade {
+    color: #A0AEC0;
     font-size: 13px;
-
-    font-weight: 700;
-
+    font-style: italic;
 }
 
 .btn-salvar {

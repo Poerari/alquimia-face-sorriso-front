@@ -255,3 +255,34 @@ tbody tr:hover {
     gap: 10px;
 
 }
+
+
+.btn-salvar {
+
+    background: #FFF59D;
+
+    border: none;
+
+    padding: 12px 22px;
+
+    border-radius: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+}
+
+.btn-cancelar {
+
+    background: #E2E8F0;
+
+    border: none;
+
+    padding: 12px 22px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+}

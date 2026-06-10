@@ -1,7 +1,3 @@
-.dashboard h1 {
-    margin-bottom: 30px;
-    color: #1A202C;
-}
 
 .cards {
     display: grid;
@@ -136,4 +132,84 @@ table {
 
 td, th {
   padding: 15px;
+}
+
+.dashboard-topo {
+
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap: 20px;
+
+  margin-bottom: 25px;
+
+}
+
+.card-saudacao {
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 30px;
+
+  min-height: 180px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+}
+
+.card-saudacao h2 {
+
+  margin: 0;
+
+  font-size: 32px;
+
+}
+
+.card-saudacao p {
+
+  margin-top: 12px;
+
+  color: #777;
+
+}
+
+.lado-direito {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+
+}
+
+.card-grafico-redondo {
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  height: 300px;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.08);
+
+}
+.card-grafico-linha {
+
+  background: white;
+
+  border-radius: 20px;
+
+  height: 250px;
+
+  padding: 20px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
 }
