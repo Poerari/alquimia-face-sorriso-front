@@ -1,31 +1,44 @@
 <div class="pagina">
 
-  <div class="cards-topo">
+<div class="cards-topo">
 
-    <div class="card-topo">
-      <h3>Gerenciamento de Consultas</h3>
-    </div>
-
-    <div class="card-topo">
-      <h3>Total de Consultas</h3>
-      <span>{{ consultas.length }}</span>
-    </div>
-
-    <div class="card-topo card-acao">
-
-      <button
-        class="btn-novo"
-        (click)="abrirFormulario()">
-
-        Nova Consulta
-
-      </button>
-
-    </div>
-
+  <div class="card-topo">
+    <h3>Total de Consultas</h3>
+    <span>{{ consultas.length }}</span>
   </div>
 
+  <div class="card-topo">
+    <h3>Consultas Agendadas</h3>
+    <span>{{ totalAgendadas }}</span>
+  </div>
+
+  <div class="card-topo">
+    <h3>Consultas Concluídas</h3>
+    <span>{{ totalConcluidas }}</span>
+  </div>
+
+  <div class="card-topo">
+    <h3>Consultas Atrasadas</h3>
+    <span>{{ totalAtrasadas }}</span>
+  </div>
+
+  <div class="card-topo">
+    <h3>Consultas Canceladas</h3>
+    <span>{{ totalCanceladas }}</span>
+  </div>
+
+  <div class="card-topo card-acao">
+    <button
+      class="btn-novo"
+      (click)="abrirFormulario()">
+      Nova Consulta
+    </button>
+  </div>
+
+</div>
+
   <div class="card-tabela">
+    <div class="tabela-scroll">
 
     <table>
 
@@ -146,6 +159,8 @@
       </tbody>
 
     </table>
+
+  </div>
 
   </div>
 

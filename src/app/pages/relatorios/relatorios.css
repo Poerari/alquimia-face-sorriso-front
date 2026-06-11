@@ -1,0 +1,223 @@
+.pagina {
+
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.card-relatorio {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+.card-relatorio h2 {
+
+    color: #2D3748;
+
+    margin-bottom: 8px;
+}
+
+.subtitulo {
+
+    color: #718096;
+
+    margin-bottom: 20px;
+}
+
+.filtros {
+
+    display: flex;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+}
+
+.filtros input,
+.filtros select {
+
+    height: 45px;
+
+    border: 1px solid #E2E8F0;
+
+    border-radius: 12px;
+
+    padding: 0 15px;
+
+    min-width: 180px;
+}
+
+.btn-gerar {
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #FFF59D;
+
+    color: #2D3748;
+
+    font-weight: 700;
+
+    padding: 0 25px;
+
+    cursor: pointer;
+}
+
+.cards-status {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+.card-status {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+
+    text-align: center;
+}
+
+.card-status h3 {
+
+    color: #2D3748;
+
+    margin-bottom: 10px;
+}
+
+.card-status span {
+
+    font-size: 28px;
+
+    font-weight: bold;
+}
+
+.card-tabela {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+thead {
+
+    background: #FFF59D;
+}
+
+th,
+td {
+
+    padding: 15px;
+
+    text-align: left;
+}
+
+td {
+
+    border-bottom: 1px solid #E2E8F0;
+}
+
+tbody tr:hover {
+
+    background: #FFFDE7;
+}
+
+.status-agendada {
+
+    background: #FFF59D;
+
+    color: #744210;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-weight: 600;
+}
+
+.status-concluida {
+
+    background: #C6F6D5;
+
+    color: #22543D;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-weight: 600;
+}
+
+.status-atrasada {
+
+    background: #FFE5E5;
+
+    color: #D32F2F;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-weight: 600;
+}
+
+.status-cancelada {
+
+    background: #FED7D7;
+
+    color: #822727;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-weight: 600;
+}
+
+.btn-pdf {
+
+    align-self: flex-end;
+
+    background: #ff6159;
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 24px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}

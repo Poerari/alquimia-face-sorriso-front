@@ -1,1 +1,143 @@
-<p>relatorios works!</p>
+<div class="pagina">
+
+  <div class="card-relatorio">
+
+    <h2>Relatórios de Consultas</h2>
+
+    <p class="subtitulo">
+      Filtre as consultas por período e status.
+    </p>
+
+    <div class="filtros">
+
+      <input
+        type="date"
+        [(ngModel)]="dataInicial">
+
+      <input
+        type="date"
+        [(ngModel)]="dataFinal">
+
+      <select [(ngModel)]="statusFiltro">
+
+        <option value="">
+          Todos os Status
+        </option>
+
+        <option value="AGENDADA">
+          Agendada
+        </option>
+
+        <option value="CONCLUIDA">
+          Concluída
+        </option>
+
+        <option value="ATRASADA">
+          Atrasada
+        </option>
+
+        <option value="CANCELADA">
+          Cancelada
+        </option>
+
+      </select>
+
+      <button
+        class="btn-gerar"
+        (click)="gerarRelatorio()">
+
+        Gerar Relatório
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="cards-status">
+
+    <div class="card-status">
+      <h3>Agendadas</h3>
+      <span>{{ agendadas }}</span>
+    </div>
+
+    <div class="card-status">
+      <h3>Concluídas</h3>
+      <span>{{ concluidas }}</span>
+    </div>
+
+    <div class="card-status">
+      <h3>Atrasadas</h3>
+      <span>{{ atrasadas }}</span>
+    </div>
+
+    <div class="card-status">
+      <h3>Canceladas</h3>
+      <span>{{ canceladas }}</span>
+    </div>
+
+  </div>
+
+  <div class="card-tabela">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>ID</th>
+          <th>Paciente</th>
+          <th>Dentista</th>
+          <th>Data</th>
+          <th>Status</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        @for (consulta of consultasFiltradas; track consulta.id) {
+
+          <tr>
+
+            <td>{{ consulta.id }}</td>
+
+            <td>{{ consulta.paciente?.nome }}</td>
+
+            <td>{{ consulta.dentista?.nome }}</td>
+
+            <td>
+              {{ consulta.dataInicio | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+
+            <td>
+
+              <span
+                [ngClass]="{
+                  'status-agendada': consulta.status === 'AGENDADA',
+                  'status-concluida': consulta.status === 'CONCLUIDA',
+                  'status-atrasada': consulta.status === 'ATRASADA',
+                  'status-cancelada': consulta.status === 'CANCELADA'
+                }">
+
+                {{ consulta.status }}
+
+              </span>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <button class="btn-pdf">
+    Exportar PDF
+  </button>
+
+</div>

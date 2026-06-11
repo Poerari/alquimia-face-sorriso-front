@@ -27,6 +27,11 @@ export class Consultas implements OnInit {
 
   mostrarFormulario = false;
 
+  totalAgendadas = 0;
+  totalConcluidas = 0;
+  totalAtrasadas = 0;
+  totalCanceladas = 0;
+
   consultaNova: any = {
 
     descricao: '',
@@ -81,7 +86,7 @@ export class Consultas implements OnInit {
       next: (dados) => {
 
         this.consultas = dados;
-
+        this.atualizarIndicadores();
         this.cdr.detectChanges();
 
       },
@@ -226,6 +231,30 @@ excluirConsulta(id: number) {
       }
 
     });
+
+}
+
+atualizarIndicadores() {
+
+  this.totalAgendadas =
+    this.consultas.filter(
+      c => c.status === 'AGENDADA'
+    ).length;
+
+  this.totalConcluidas =
+    this.consultas.filter(
+      c => c.status === 'CONCLUIDA'
+    ).length;
+
+  this.totalAtrasadas =
+    this.consultas.filter(
+      c => c.status === 'ATRASADA'
+    ).length;
+
+  this.totalCanceladas =
+    this.consultas.filter(
+      c => c.status === 'CANCELADA'
+    ).length;
 
 }
 
