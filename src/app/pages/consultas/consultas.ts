@@ -57,7 +57,7 @@ export class Consultas implements OnInit {
   ngOnInit(): void {
 
     this.carregarConsultas();
-
+   
     this.pacienteService.listar().subscribe({
       next: (dados) => {
         this.pacientes = dados;
@@ -69,6 +69,8 @@ export class Consultas implements OnInit {
         this.dentistas = dados;
       }
     });
+
+    
 
   }
 
@@ -130,7 +132,7 @@ export class Consultas implements OnInit {
   }
   
  salvarConsulta() {
-  // Igualando as datas caso o back-end exija ambos os campos preenchidos
+  
   if (this.consultaNova.dataInicio) {
     this.consultaNova.dataFim = this.consultaNova.dataInicio;
   }
