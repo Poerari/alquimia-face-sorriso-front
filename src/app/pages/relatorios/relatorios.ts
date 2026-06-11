@@ -3,6 +3,8 @@ import {
   OnInit,
   ChangeDetectorRef
 } from '@angular/core';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +13,7 @@ import { PacienteService } from '../../services/paciente';
 import { DentistaService } from '../../services/dentista';
 import { ConsultaService } from '../../services/consulta';
 import { EspecialidadeService } from '../../services/especialidade';
+
 
 @Component({
   selector: 'app-relatorios',
@@ -121,61 +124,95 @@ export class Relatorios implements OnInit {
 
   }
 
-  gerarRelatorio() {
+ gerarRelatorio() {
 
-    this.consultasFiltradas =
-      this.consultas.filter(consulta => {
+  this.consultasFiltradas = this.consultas.filter(consulta => {
 
-        const dataConsulta =
-          new Date(consulta.dataInicio);
+    const dataConsulta =
+      consulta.dataInicio.substring(0, 10);
 
-        let atendeDataInicial = true;
-        let atendeDataFinal = true;
-        let atendeStatus = true;
+    let atendeDataInicial = true;
+    let atendeDataFinal = true;
+    let atendeStatus = true;
 
-        if (this.dataInicial) {
+    if (this.dataInicial) {
 
-          atendeDataInicial =
-            dataConsulta >=
-            new Date(this.dataInicial);
+      atendeDataInicial =
+        dataConsulta >= this.dataInicial;
 
-        }
+    }
 
-        if (this.dataFinal) {
+    if (this.dataFinal) {
 
-          const dataFim =
-            new Date(this.dataFinal);
+      atendeDataFinal =
+        dataConsulta <= this.dataFinal;
 
-          dataFim.setHours(
-            23,
-            59,
-            59,
-            999
-          );
+    }
 
-          atendeDataFinal =
-            dataConsulta <= dataFim;
+    if (this.statusFiltro) {
 
-        }
+      atendeStatus =
+        consulta.status === this.statusFiltro;
 
-        if (this.statusFiltro) {
+    }
 
-          atendeStatus =
-            consulta.status ===
-            this.statusFiltro;
+    return (
+      atendeDataInicial &&
+      atendeDataFinal &&
+      atendeStatus
+    );
 
-        }
+  });
 
-        return (
-          atendeDataInicial &&
-          atendeDataFinal &&
-          atendeStatus
-        );
+  this.cdr.detectChanges();
 
-      });
+}
 
-    this.cdr.detectChanges();
+exportarPDF() {
 
-  }
+  const doc = new jsPDF();
 
+  doc.setFontSize(18);
+
+  doc.text(
+    'Relatório de Consultas',
+    14,
+    20
+  );
+
+  autoTable(doc, {
+
+    startY: 30,
+
+    head: [[
+      'ID',
+      'Paciente',
+      'Dentista',
+      'Data',
+      'Status'
+    ]],
+
+    body: this.consultasFiltradas.map(consulta => [
+
+      consulta.id,
+
+      consulta.paciente?.nome || '',
+
+      consulta.dentista?.nome || '',
+
+      new Date(
+        consulta.dataInicio
+      ).toLocaleString('pt-BR'),
+
+      consulta.status
+
+    ])
+
+  });
+
+  doc.save(
+    'relatorio-consultas.pdf'
+  );
+
+}
 }
