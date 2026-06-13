@@ -1,1 +1,172 @@
-<p>usuarios works!</p>
+<div class="pagina">
+
+  <div class="cards-topo">
+
+    <div class="card-topo">
+      <h3>Gerenciamento de Usuários</h3>
+    </div>
+
+    <div class="card-topo">
+      <h3>Total de Usuários</h3>
+      <span>{{ totalUsuarios }}</span>
+    </div>
+
+    <div class="card-topo card-acao">
+      <button
+        class="btn-novo"
+        (click)="abrirFormulario()">
+        Novo Usuário
+      </button>
+    </div>
+
+  </div>
+
+  <div class="card-tabela">
+
+    <div class="tabela-scroll">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Email</th>
+            <th>Perfil</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (usuario of usuarios; track usuario.id) {
+            <tr>
+              <td>{{ usuario?.id }}</td>
+              <td>{{ usuario?.nome }}</td>
+              <td>{{ usuario?.cpf }}</td>
+              <td>{{ usuario?.email }}</td>
+              <td>{{ usuario?.perfil }}</td>
+              <td>
+                @if (usuario.ativo) {
+                  <span class="status-ativo">
+                    Ativo
+                  </span>
+                } @else {
+                  <span class="status-inativo">
+                    Inativo
+                  </span>
+                }
+              </td>
+              <td>
+                <button
+                  class="btn-editar"
+                  (click)="editarUsuario(usuario)">
+                  Editar
+                </button>
+                <button
+                  class="btn-excluir"
+                  (click)="excluirUsuario(usuario.id)">
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          }
+          @empty {
+            <tr>
+              <td
+                colspan="7"
+                class="sem-registros">
+                Nenhum usuário encontrado.
+              </td>
+            </tr>
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  @if (mostrarFormulario) {
+    <div class="overlay">
+
+      <div class="modal">
+
+        <h2>
+          {{ usuarioNovo.id ? 'Editar Usuário' : 'Novo Usuário' }}
+        </h2>
+
+        <input
+          type="text"
+          placeholder="Nome"
+          [(ngModel)]="usuarioNovo.nome">
+
+        <input
+          type="text"
+          placeholder="CPF"
+          [(ngModel)]="usuarioNovo.cpf">
+
+        <input
+          type="email"
+          placeholder="Email"
+          [(ngModel)]="usuarioNovo.email">
+
+        <input
+          type="password"
+          placeholder="Senha"
+          [(ngModel)]="usuarioNovo.senha">
+
+        <select
+          [(ngModel)]="usuarioNovo.perfil">
+          <option value="">
+            Selecione o Perfil
+          </option>
+          <option value="ADMIN">
+            Administrador
+          </option>
+          <option value="RECEPCIONISTA">
+            Recepcionista
+          </option>
+          <option value="DENTISTA">
+            Dentista
+          </option>
+        </select>
+
+        @if (usuarioNovo.id) {
+          <div>
+            <label>Status</label>
+            <select
+              [(ngModel)]="usuarioNovo.ativo">
+              <option [ngValue]="true">
+                Ativo
+              </option>
+              <option [ngValue]="false">
+                Inativo
+              </option>
+            </select>
+          </div>
+        }
+
+        <div class="acoes-modal">
+          <button
+            class="btn-salvar"
+            (click)="salvarUsuario()">
+            Salvar
+          </button>
+          <button
+            class="btn-cancelar"
+            (click)="fecharFormulario()">
+            Cancelar
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  }
+
+</div>
