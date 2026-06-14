@@ -1,1 +1,38 @@
-<p>login works!</p>
+<div class="login-container">
+
+  <div class="card-login">
+
+    <h1>Alquimia Face & Sorriso</h1>
+
+    <p>
+      Sistema de Gestão Odontológica
+    </p>
+
+    <input
+      type="email"
+      placeholder="Email"
+      [(ngModel)]="email">
+
+    <input
+      type="password"
+      placeholder="Senha"
+      [(ngModel)]="senha">
+
+    <button
+      (click)="entrar()">
+
+      Entrar
+
+    </button>
+
+    <div
+      *ngIf="erro"
+      class="erro">
+
+      {{ erro }}
+
+    </div>
+
+  </div>
+
+</div>

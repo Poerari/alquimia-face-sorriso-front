@@ -1,66 +1,65 @@
-<div class="container-principal">
+@if (usuarioLogado) {
+  <div class="container-principal">
 
-  
+    <aside class="menu-lateral">
+      <div class="logo-container">
+        <h1 class="logo">
+          Alquimia
+        </h1>
+        <span class="subtitulo-logo">
+          Face & Sorriso
+        </span>
+      </div>
 
-  <aside class="menu-lateral">
+      <a routerLink="/dashboard" routerLinkActive="ativo">
+        Dashboard
+      </a>
 
-  <div class="logo-container">
+      <a routerLink="/consultas" routerLinkActive="ativo">
+        Consultas
+      </a>
 
-  <h1 class="logo">
-    Alquimia
-  </h1>
+      <a routerLink="/pacientes" routerLinkActive="ativo">
+        Pacientes
+      </a>
 
-  <span class="subtitulo-logo">
-    Face & Sorriso
-  </span>
+      <a routerLink="/dentistas" routerLinkActive="ativo">
+        Dentistas
+      </a>
 
-</div>
+      <a routerLink="/especialidades" routerLinkActive="ativo">
+        Especialidades
+      </a>
 
+      <a routerLink="/relatorios" routerLinkActive="ativo">
+        Relatórios
+      </a>
 
-    <a routerLink="/dashboard" routerLinkActive="ativo">
-      Dashboard
-    </a>
+      @if (usuarioLogado.perfil === 'ADMIN') {
+        <a routerLink="/usuarios" routerLinkActive="ativo">
+          Usuários
+        </a>
+      }
+      
+    </aside>
 
-    <a routerLink="/consultas" routerLinkActive="ativo">
-      Consultas
-    </a>
+    <main class="conteudo-principal">
+      <div class="topbar">
+        <input
+          type="text"
+          placeholder="Pesquisar..."
+          class="campo-busca"
+        />
 
-    <a routerLink="/pacientes" routerLinkActive="ativo">
-      Pacientes
-    </a>
+        <div class="usuario" (click)="sair()" style="cursor: pointer;" title="Clique para sair">
+          {{ usuarioLogado.nome }} (Sair)
+        </div>
+      </div>
 
-    <a routerLink="/dentistas" routerLinkActive="ativo">
-      Dentistas
-    </a>
+      <router-outlet></router-outlet>
 
-    <a routerLink="/especialidades" routerLinkActive="ativo">
-      Especialidades
-    </a>
-
-    <a routerLink="/relatorios" routerLinkActive="ativo">
-      Relatórios
-    </a>
-
-    <a routerLink="/usuarios" routerLinkActive="ativo">
-      Usuários
-    </a>
-    
-  </aside>
-  <main class="conteudo-principal">
-    <div class="topbar">
-
-     <input
-      type="text"
-      placeholder="Pesquisar..."
-      class="campo-busca"
-    />
-
-    <div class="usuario">
-      Gabriela
-    </div>
-
-    </div>
-    <router-outlet></router-outlet>
-
-  </main>
-</div>
+    </main>
+  </div>
+} @else {
+  <router-outlet></router-outlet>
+}

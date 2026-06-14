@@ -17,6 +17,7 @@ export class Pacientes implements OnInit {
   filtro = '';
   mostrarFormulario = false;
   modoEdicao = false; 
+  perfilUsuario = ''; // Variável para armazenar o perfil logado
 
   pacienteNovo: Paciente = {
     id: 0,
@@ -38,7 +39,22 @@ export class Pacientes implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.carregarPerfil();
     this.carregarPacientes();
+  }
+
+  // Captura o perfil do localStorage para sabermos o nível de acesso
+  carregarPerfil() {
+    const usuarioSalvo = localStorage.getItem('usuario');
+    if (usuarioSalvo) {
+      const usuario = JSON.parse(usuarioSalvo);
+      this.perfilUsuario = usuario.perfil;
+    }
+  }
+
+  // Método auxiliar para verificar se o usuário atual é apenas um leitor (Dentista)
+  ehSomenteLeitura(): boolean {
+    return this.perfilUsuario === 'DENTISTA';
   }
 
   carregarPacientes() {
@@ -55,8 +71,10 @@ export class Pacientes implements OnInit {
   }
 
   abrirFormulario() {
+    // Se por acaso tentar forçar a abertura por funções, o sistema bloqueia
+    if (this.ehSomenteLeitura()) return;
+
     this.modoEdicao = false;
-   
     this.pacienteNovo = {
       id: undefined as any, 
       nome: '',
@@ -84,99 +102,50 @@ export class Pacientes implements OnInit {
   }
 
   editarPaciente(paciente: Paciente) {
+    if (this.ehSomenteLeitura()) return;
+
     this.modoEdicao = true;
-    
     this.pacienteNovo = { ...paciente }; 
     this.mostrarFormulario = true;
   }
 
+  salvarPaciente() {
+    if (this.ehSomenteLeitura()) return;
 
-  
-  
+    if (!this.pacienteNovo.nome || !this.pacienteNovo.cpf) {
+      alert('Nome e CPF são obrigatórios.');
+      return;
+    }
 
- salvarPaciente() {
-
-  if (
-    !this.pacienteNovo.nome ||
-    !this.pacienteNovo.cpf
-  ) {
-
-    alert('Nome e CPF são obrigatórios.');
-
-    return;
-
-  }
-
-  if (this.modoEdicao) {
-
-    this.pacienteService
-      .atualizar(
-        this.pacienteNovo.id,
-        this.pacienteNovo
-      )
-      .subscribe({
-
-        next: (pacienteAtualizado) => {
-
-          const index =
-            this.pacientes.findIndex(
-              p => p.id === pacienteAtualizado.id
-            );
-
-          if (index !== -1) {
-
-            this.pacientes[index] =
-              pacienteAtualizado;
-
+    if (this.modoEdicao) {
+      this.pacienteService
+        .atualizar(this.pacienteNovo.id, this.pacienteNovo)
+        .subscribe({
+          next: (pacienteAtualizado) => {
+            const index = this.pacientes.findIndex(p => p.id === pacienteAtualizado.id);
+            if (index !== -1) {
+              this.pacientes[index] = pacienteAtualizado;
+            }
+            this.fecharFormulario();
+            this.cdr.detectChanges();
+          },
+          error: (erro) => {
+            console.error('Erro ao atualizar paciente', erro);
           }
-
-          this.fecharFormulario();
-
-          this.cdr.detectChanges();
-
-        },
-
-        error: (erro) => {
-
-          console.error(
-            'Erro ao atualizar paciente',
-            erro
-          );
-
-        }
-
-      });
-
-  } else {
-
-    this.pacienteService
-      .cadastrar(this.pacienteNovo)
-      .subscribe({
-
-        next: (novoPaciente) => {
-
-          this.pacientes.push(
-            novoPaciente
-          );
-
-          this.fecharFormulario();
-
-          this.cdr.detectChanges();
-
-        },
-
-        error: (erro) => {
-
-          console.error(
-            'Erro ao cadastrar paciente',
-            erro
-          );
-
-        }
-
-      });
-
+        });
+    } else {
+      this.pacienteService
+        .cadastrar(this.pacienteNovo)
+        .subscribe({
+          next: (novoPaciente) => {
+            this.pacientes.push(novoPaciente);
+            this.fecharFormulario();
+            this.cdr.detectChanges();
+          },
+          error: (erro) => {
+            console.error('Erro ao cadastrar paciente', erro);
+          }
+        });
+    }
   }
-
-}
 }

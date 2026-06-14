@@ -11,66 +11,70 @@
       <span>{{ dentistas.length }}</span>
     </div>
 
-    <div class="card-topo card-acao">
-      <button
-        class="btn-novo"
-        (click)="mostrarFormulario = true">
-
-        Novo Dentista
-
-      </button>
-    </div>
+    @if (!ehSomenteLeitura()) {
+      <div class="card-topo card-acao">
+        <button
+          class="btn-novo"
+          (click)="abrirFormulario()">
+          Novo Dentista
+        </button>
+      </div>
+    }
 
   </div>
 
-
-<div class="card-tabela">
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>CRO</th>
-        <th>Email</th>
-        <th>Especialidade</th> <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (dentista of dentistas; track dentista.id) {
+  <div class="card-tabela">
+    <table>
+      <thead>
         <tr>
-          <td>{{ dentista.nome }}</td>
-          <td>{{ dentista.cro }}</td>
-          <td>{{ dentista.email }}</td>
-          
-          <td>
-            @if (dentista.especialidades?.length) {
-              @for (esp of dentista.especialidades; track esp.id) {
-                <span class="badge-especialidade">
-                  {{ esp.nome }}
+          <th>Nome</th>
+          <th>CRO</th>
+          <th>Email</th>
+          <th>Especialidade</th>
+          @if (!ehSomenteLeitura()) {
+            <th>Ações</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (dentista of dentistas; track dentista.id) {
+          <tr>
+            <td>{{ dentista.nome }}</td>
+            <td>{{ dentista.cro }}</td>
+            <td>{{ dentista.email }}</td>
+            
+            <td>
+              @if (dentista.especialidades?.length) {
+                @for (esp of dentista.especialidades; track esp.id) {
+                  <span class="badge-especialidade">
+                    {{ esp.nome }}
+                  </span>
+                }
+              } @else {
+                <span class="sem-especialidade">
+                  Nenhuma
                 </span>
               }
-            } @else {
-              <span class="sem-especialidade">
-                Nenhuma
-              </span>
-            }
-          </td>
+            </td>
 
-          <td>
-            <button class="btn-editar" (click)="editarDentista(dentista)">
-              Editar
-            </button>
-          </td>
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="5" style="text-align:center; color:#718096;">
-            Nenhum dentista encontrado.
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
-</div>
+            @if (!ehSomenteLeitura()) {
+              <td>
+                <button class="btn-editar" (click)="editarDentista(dentista)">
+                  Editar
+                </button>
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr>
+            <td [attr.colspan]="ehSomenteLeitura() ? 4 : 5" style="text-align:center; color:#718096;">
+              Nenhum dentista encontrado.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
 </div>
 
@@ -135,17 +139,13 @@
         <button
           class="btn-salvar"
           (click)="salvarDentista()">
-
           Salvar
-
         </button>
 
         <button
           class="btn-cancelar"
           (click)="fecharFormulario()">
-
           Cancelar
-
         </button>
 
       </div>

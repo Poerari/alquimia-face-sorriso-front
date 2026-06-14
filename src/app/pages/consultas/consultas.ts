@@ -20,11 +20,8 @@ import { DentistaService } from '../../services/dentista';
 export class Consultas implements OnInit {
 
   consultas: Consulta[] = [];
-
   pacientes: Paciente[] = [];
-
   dentistas: Dentista[] = [];
-
   mostrarFormulario = false;
 
   totalAgendadas = 0;
@@ -32,24 +29,17 @@ export class Consultas implements OnInit {
   totalAtrasadas = 0;
   totalCanceladas = 0;
 
+  perfilUsuario = '';
+  nomeUsuarioLogado = '';
+  idDentistaLogado: number | null = null; // Guardará o ID do Dr. João no banco
+
   consultaNova: any = {
-
     descricao: '',
-
     status: 'AGENDADA',
-
     dataInicio: '',
-
     dataFim: '',
-
-    paciente: {
-      id: null
-    },
-
-    dentista: {
-      id: null
-    }
-
+    paciente: { id: null },
+    dentista: { id: null }
   };
 
   constructor(
@@ -60,202 +50,174 @@ export class Consultas implements OnInit {
   ) {}
 
   ngOnInit(): void {
+  this.carregarPerfil();
+  
+  this.pacienteService.listar().subscribe({
+    next: (dados) => { this.pacientes = dados; }
+  });
 
-    this.carregarConsultas();
-   
-    this.pacienteService.listar().subscribe({
-      next: (dados) => {
-        this.pacientes = dados;
-      }
-    });
+  // Primeiro trazemos os dentistas para mapear quem está logado
+  this.dentistaService.listar().subscribe({
+    next: (dados) => {
+      this.dentistas = dados;
+      this.vincularIdDentista();
+      // Agora sim, com o ID devidamente mapeado, carregamos as consultas filtradas
+      this.carregarConsultas(); 
+    },
+    error: (erro) => {
+      console.error('Erro ao listar dentistas', erro);
+      this.carregarConsultas(); // Fallback caso a rota falhe
+    }
+  });
+}
 
-    this.dentistaService.listar().subscribe({
-      next: (dados) => {
-        this.dentistas = dados;
-      }
-    });
+  carregarPerfil() {
+    const usuarioSalvo = localStorage.getItem('usuario');
+    if (usuarioSalvo) {
+      const usuario = JSON.parse(usuarioSalvo);
+      this.perfilUsuario = usuario.perfil;
+      this.nomeUsuarioLogado = usuario.nome; // Ex: "Dr. João"
+    }
+  }
 
+  ehDentista(): boolean {
+    return this.perfilUsuario === 'DENTISTA';
+  }
+
+vincularIdDentista() {
+  if (this.ehDentista() && this.dentistas.length > 0) {
+    // Remove pontos e espaços extras para comparar apenas o texto essencial
+    const limparString = (txt: string) => txt.replace(/\./g, '').trim().toLowerCase();
     
+    const nomeLogadoLimpo = limparString(this.nomeUsuarioLogado);
 
+    const correspondente = this.dentistas.find(d => 
+      limparString(d.nome) === nomeLogadoLimpo
+    );
+
+    if (correspondente) {
+      this.idDentistaLogado = correspondente.id;
+      console.log('ID do Dentista Logado Vinculado com Sucesso:', this.idDentistaLogado);
+    } else {
+      console.warn('AVISO: Não foi encontrado nenhum dentista no banco com o nome:', this.nomeUsuarioLogado);
+    }
   }
+}
 
-  carregarConsultas() {
+carregarConsultas() {
+  this.consultaService.listar().subscribe({
+    next: (dados) => {
+      console.log('Todas as consultas vindas do servidor:', dados);
 
-    this.consultaService.listar().subscribe({
-
-      next: (dados) => {
-
+      if (this.ehDentista() && this.idDentistaLogado !== null) {
+        // Filtra estritamente pelo ID mapeado
+        this.consultas = dados.filter(c => c.dentista?.id === this.idDentistaLogado);
+        console.log('Consultas filtradas para o dentista logado:', this.consultas);
+      } else {
         this.consultas = dados;
-        this.atualizarIndicadores();
-        this.cdr.detectChanges();
-
-      },
-
-      error: (erro) => {
-
-        console.error(
-          'Erro ao carregar consultas',
-          erro
-        );
-
       }
 
-    });
-
-  }
+      this.atualizarIndicadores();
+      this.cdr.detectChanges();
+    },
+    error: (erro) => {
+      console.error('Erro ao carregar consultas', erro);
+    }
+  });
+}
 
   abrirFormulario() {
-
     this.consultaNova = {
-
       descricao: '',
-
       status: 'AGENDADA',
-
       dataInicio: '',
-
       dataFim: '',
-
-      paciente: {
-        id: null
-      },
-
-      dentista: {
-        id: null
-      }
-
+      paciente: { id: null },
+      dentista: { id: null }
     };
 
-    this.mostrarFormulario = true;
+    // Se for DENTISTA, pré-seleciona e amarra o ID dele no formulário
+    if (this.ehDentista() && this.idDentistaLogado !== null) {
+      this.consultaNova.dentista.id = this.idDentistaLogado;
+    }
 
+    this.mostrarFormulario = true;
   }
 
   fecharFormulario() {
-
     this.mostrarFormulario = false;
-
   }
   
- salvarConsulta() {
-  
-  if (this.consultaNova.dataInicio) {
-    this.consultaNova.dataFim = this.consultaNova.dataInicio;
+  salvarConsulta() {
+    if (this.consultaNova.dataInicio) {
+      this.consultaNova.dataFim = this.consultaNova.dataInicio;
+    }
+
+    if (
+      !this.consultaNova.paciente?.id ||
+      !this.consultaNova.dentista?.id ||
+      !this.consultaNova.dataInicio
+    ) {
+      alert('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    if (this.consultaNova.id) {
+      this.consultaService
+        .atualizar(this.consultaNova.id, this.consultaNova)
+        .subscribe({
+          next: () => {
+            this.carregarConsultas();
+            this.fecharFormulario();
+          },
+          error: (erro) => {
+            console.error('Erro ao atualizar consulta', erro);
+          }
+        });
+    } else {
+      this.consultaService
+        .cadastrar(this.consultaNova)
+        .subscribe({
+          next: () => {
+            this.carregarConsultas();
+            this.fecharFormulario();
+          },
+          error: (erro) => {
+            alert(erro.error?.message || 'Não foi possível salvar a consulta.');
+          }
+        });
+    }
   }
 
-  if (
-    !this.consultaNova.paciente?.id ||
-    !this.consultaNova.dentista?.id ||
-    !this.consultaNova.dataInicio
-  ) {
-    alert('Preencha todos os campos obrigatórios.');
-    return;
+  editarConsulta(consulta: Consulta) {
+    this.mostrarFormulario = true;
+    this.consultaNova = { 
+      ...consulta,
+      paciente: consulta.paciente ? { ...consulta.paciente } : { id: null },
+      dentista: consulta.dentista ? { ...consulta.dentista } : { id: null }
+    };
   }
 
-  if (this.consultaNova.id) {
-    this.consultaService
-      .atualizar(this.consultaNova.id, this.consultaNova)
-      .subscribe({
-        next: () => {
-          this.carregarConsultas();
-          this.fecharFormulario();
-        },
-        error: (erro) => {
-          console.error('Erro ao atualizar consulta', erro);
-        }
-      });
-  } else {
-    this.consultaService
-      .cadastrar(this.consultaNova)
-      .subscribe({
-        next: () => {
-          this.carregarConsultas();
-          this.fecharFormulario();
-        },
+  excluirConsulta(id: number) {
+    const confirmar = confirm('Tem certeza que deseja excluir esta consulta?');
+    if (!confirmar) return;
 
-        error: (erro) => {
-
-        alert(
-          erro.error?.message ||
-          'Não foi possível salvar a consulta.'
-  );
-
-}
-      });
-  }
-}
-
-editarConsulta(consulta: Consulta) {
-  this.mostrarFormulario = true;
-  
-  
-  this.consultaNova = { 
-    ...consulta,
-  
-    paciente: consulta.paciente ? { ...consulta.paciente } : { id: null },
-    dentista: consulta.dentista ? { ...consulta.dentista } : { id: null }
-  };
-}
-
-excluirConsulta(id: number) {
-
-  const confirmar = confirm(
-    'Tem certeza que deseja excluir esta consulta?'
-  );
-
-  if (!confirmar) {
-    return;
-  }
-
-  this.consultaService
-    .excluir(id)
-    .subscribe({
-
+    this.consultaService.excluir(id).subscribe({
       next: () => {
-
-        this.consultas =
-          this.consultas.filter(
-            consulta => consulta.id !== id
-          );
-
+        this.consultas = this.consultas.filter(consulta => consulta.id !== id);
+        this.atualizarIndicadores();
         this.cdr.detectChanges();
-
       },
-
       error: (erro) => {
-
-        console.error(
-          'Erro ao excluir consulta',
-          erro
-        );
-
+        console.error('Erro ao excluir consulta', erro);
       }
-
     });
+  }
 
-}
-
-atualizarIndicadores() {
-
-  this.totalAgendadas =
-    this.consultas.filter(
-      c => c.status === 'AGENDADA'
-    ).length;
-
-  this.totalConcluidas =
-    this.consultas.filter(
-      c => c.status === 'CONCLUIDA'
-    ).length;
-
-  this.totalAtrasadas =
-    this.consultas.filter(
-      c => c.status === 'ATRASADA'
-    ).length;
-
-  this.totalCanceladas =
-    this.consultas.filter(
-      c => c.status === 'CANCELADA'
-    ).length;
-
-}
-
+  atualizarIndicadores() {
+    this.totalAgendadas = this.consultas.filter(c => c.status === 'AGENDADA').length;
+    this.totalConcluidas = this.consultas.filter(c => c.status === 'CONCLUIDA').length;
+    this.totalAtrasadas = this.consultas.filter(c => c.status === 'ATRASADA').length;
+    this.totalCanceladas = this.consultas.filter(c => c.status === 'CANCELADA').length;
+  }
 }

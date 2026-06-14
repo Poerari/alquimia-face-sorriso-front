@@ -1,173 +1,106 @@
 <div class="pagina">
 
-<div class="cards-topo">
+  <div class="cards-topo">
 
-  <div class="card-topo">
-    <h3>Total de Consultas</h3>
-    <span>{{ consultas.length }}</span>
+    <div class="card-topo">
+      <h3>Total de Consultas</h3>
+      <span>{{ consultas.length }}</span>
+    </div>
+
+    <div class="card-topo">
+      <h3>Consultas Agendadas</h3>
+      <span>{{ totalAgendadas }}</span>
+    </div>
+
+    <div class="card-topo">
+      <h3>Consultas Concluídas</h3>
+      <span>{{ totalConcluidas }}</span>
+    </div>
+
+    <div class="card-topo">
+      <h3>Consultas Atrasadas</h3>
+      <span>{{ totalAtrasadas }}</span>
+    </div>
+
+    <div class="card-topo">
+      <h3>Consultas Canceladas</h3>
+      <span>{{ totalCanceladas }}</span>
+    </div>
+
+    <div class="card-topo card-acao">
+      <button
+        class="btn-novo"
+        (click)="abrirFormulario()">
+        Nova Consulta
+      </button>
+    </div>
+
   </div>
-
-  <div class="card-topo">
-    <h3>Consultas Agendadas</h3>
-    <span>{{ totalAgendadas }}</span>
-  </div>
-
-  <div class="card-topo">
-    <h3>Consultas Concluídas</h3>
-    <span>{{ totalConcluidas }}</span>
-  </div>
-
-  <div class="card-topo">
-    <h3>Consultas Atrasadas</h3>
-    <span>{{ totalAtrasadas }}</span>
-  </div>
-
-  <div class="card-topo">
-    <h3>Consultas Canceladas</h3>
-    <span>{{ totalCanceladas }}</span>
-  </div>
-
-  <div class="card-topo card-acao">
-    <button
-      class="btn-novo"
-      (click)="abrirFormulario()">
-      Nova Consulta
-    </button>
-  </div>
-
-</div>
 
   <div class="card-tabela">
     <div class="tabela-scroll">
 
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>ID</th>
-          <th>Paciente</th>
-          <th>Dentista</th>
-          <th>Data</th>
-          <th>Hora</th>
-          <th>Status</th>
-          <th>Ações</th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        @for (consulta of consultas; track consulta.id) {
-
+      <table>
+        <thead>
           <tr>
-
-            <td>{{ consulta.id }}</td>
-
-            <td>{{ consulta.paciente?.nome }}</td>
-
-            <td>{{ consulta.dentista?.nome }}</td>
-
-            <td>
-              {{ consulta.dataInicio | date:'dd/MM/yyyy' }}
-            </td>
-
-            <td>
-              {{ consulta.dataInicio | date:'HH:mm' }}
-            </td>
-
-            <td>
-
-              @if (consulta.status === 'AGENDADA') {
-
-                <span class="status-agendada">
-                  Agendada
-                </span>
-
-              }
-
-              @if (consulta.status === 'CONCLUIDA') {
-
-                <span class="status-concluida">
-                  Concluída
-                </span>
-
-              }
-
-              @if (consulta.status === 'CANCELADA') {
-
-                <span class="status-cancelada">
-                  Cancelada
-                </span>
-
-              }
-
-            
-
-              @if (consulta.status === 'ATRASADA') {
-
-                <span class="status-atrasada">
-
-                  Atrasada
-
-                </span>
-              }
-
-            </td>
-
-            <td>
-
-              <button
-                class="btn-editar"
-                (click)="editarConsulta(consulta)">
-
-                Editar
-
-              </button>
-
-              <button
-              class="btn-excluir"
-              (click)="excluirConsulta(consulta.id)">
-
-              Excluir
-
-             </button>
-
-
-            </td>
-
+            <th>ID</th>
+            <th>Paciente</th>
+            <th>Dentista</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Status</th>
+            <th>Ações</th>
           </tr>
+        </thead>
 
-        }
+        <tbody>
+          @for (consulta of consultas; track consulta.id) {
+            <tr>
+              <td>{{ consulta.id }}</td>
+              <td>{{ consulta.paciente?.nome }}</td>
+              <td>{{ consulta.dentista?.nome }}</td>
+              <td>{{ consulta.dataInicio | date:'dd/MM/yyyy' }}</td>
+              <td>{{ consulta.dataInicio | date:'HH:mm' }}</td>
 
-        @empty {
+              <td>
+                @if (consulta.status === 'AGENDADA') {
+                  <span class="status-agendada">Agendada</span>
+                }
+                @if (consulta.status === 'CONCLUIDA') {
+                  <span class="status-concluida">Concluída</span>
+                }
+                @if (consulta.status === 'CANCELADA') {
+                  <span class="status-cancelada">Cancelada</span>
+                }
+                @if (consulta.status === 'ATRASADA') {
+                  <span class="status-atrasada">Atrasada</span>
+                }
+              </td>
 
-          <tr>
+              <td>
+                <button class="btn-editar" (click)="editarConsulta(consulta)">
+                  Editar
+                </button>
+                <button class="btn-excluir" (click)="excluirConsulta(consulta.id)">
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="sem-registros">
+                Nenhuma consulta encontrada.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
 
-            <td colspan="7" class="sem-registros">
-
-              Nenhuma consulta encontrada.
-
-            </td>
-
-          </tr>
-
-        }
-
-      </tbody>
-
-    </table>
-
-  </div>
-
+    </div>
   </div>
 
   <div *ngIf="mostrarFormulario" class="overlay">
-
     <div class="modal">
-
       <h2>{{ consultaNova.id ? 'Editar Consulta' : 'Nova Consulta' }}</h2>
 
       <select [(ngModel)]="consultaNova.paciente.id" required>
@@ -177,14 +110,16 @@
         </option>
       </select>
 
-      <select [(ngModel)]="consultaNova.dentista.id" required>
+      <select [(ngModel)]="consultaNova.dentista.id" [disabled]="ehDentista()" required>
         <option [ngValue]="null">Selecione o Dentista</option>
         <option *ngFor="let dentista of dentistas" [ngValue]="dentista.id">
           {{ dentista.nome }}
         </option>
       </select>
 
-      <label for="dataInicio" style="font-size: 14px; color: #555; display: block; margin-top: 10px;">Data e Hora da Consulta:</label>
+      <label for="dataInicio" style="font-size: 14px; color: #555; display: block; margin-top: 10px;">
+        Data e Hora da Consulta:
+      </label>
       <input
         id="dataInicio"
         type="datetime-local"
@@ -196,26 +131,13 @@
         placeholder="Descrição"
         [(ngModel)]="consultaNova.descricao">
 
-        <div *ngIf="consultaNova.id">
-
+      <div *ngIf="consultaNova.id">
         <label>Status</label>
-
         <select [(ngModel)]="consultaNova.status">
-
-          <option value="AGENDADA">
-            Agendada
-          </option>
-
-          <option value="CONCLUIDA">
-            Concluída
-          </option>
-
-          <option value="CANCELADA">
-            Cancelada
-          </option>
-
+          <option value="AGENDADA">Agendada</option>
+          <option value="CONCLUIDA">Concluída</option>
+          <option value="CANCELADA">Cancelada</option>
         </select>
-
       </div>
 
       <div class="acoes-modal">
@@ -228,7 +150,6 @@
       </div>
 
     </div>
-
   </div>
 
 </div>

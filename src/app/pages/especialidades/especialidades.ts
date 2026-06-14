@@ -10,17 +10,16 @@ import { EspecialidadeService } from '../../services/especialidade';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './especialidades.html',
-  styleUrl: './especialidades.css'
+  styleUrl: './especialidades.css',
 })
 export class Especialidades implements OnInit {
-
   especialidades: Especialidade[] = [];
-
   mostrarFormulario = false;
-
   modoEdicao = false;
+  perfilUsuario = ''; // Armazena o perfil do usuário logado
 
-  especialidadeNova: any = {
+  especialidadeNova: Especialidade = {
+    id: 0,
     nome: ''
   };
 
@@ -30,131 +29,98 @@ export class Especialidades implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.carregarPerfil();
     this.carregarEspecialidades();
   }
 
+  // Recupera o perfil para validação de acesso
+  carregarPerfil() {
+    const usuarioSalvo = localStorage.getItem('usuario');
+    if (usuarioSalvo) {
+      const usuario = JSON.parse(usuarioSalvo);
+      this.perfilUsuario = usuario.perfil;
+    }
+  }
+
+  // Verifica se o usuário logado possui restrição de escrita nesta tela
+  ehSomenteLeitura(): boolean {
+    return this.perfilUsuario === 'DENTISTA';
+  }
+
   carregarEspecialidades() {
-
     this.especialidadeService.listar().subscribe({
-
       next: (dados) => {
-
         this.especialidades = dados;
-
         this.cdr.detectChanges();
-
       },
-
       error: (erro) => {
-
-        console.error(
-          'Erro ao carregar especialidades',
-          erro
-        );
-
+        console.error('Erro ao carregar especialidades', erro);
       }
-
     });
-
   }
 
   abrirFormulario() {
+    if (this.ehSomenteLeitura()) return;
 
     this.modoEdicao = false;
-
     this.especialidadeNova = {
+      id: undefined as any,
       nome: ''
     };
-
     this.mostrarFormulario = true;
-
+    this.cdr.detectChanges();
   }
 
   fecharFormulario() {
-
     this.mostrarFormulario = false;
-
+    this.cdr.detectChanges();
   }
 
   editarEspecialidade(especialidade: Especialidade) {
+    if (this.ehSomenteLeitura()) return;
 
     this.modoEdicao = true;
-
-    this.especialidadeNova = {
-      ...especialidade
-    };
-
+    this.especialidadeNova = { ...especialidade };
     this.mostrarFormulario = true;
-
   }
 
   salvarEspecialidade() {
+    if (this.ehSomenteLeitura()) return;
 
     if (!this.especialidadeNova.nome) {
-
-      alert('Informe o nome da especialidade.');
-
+      alert('O nome da especialidade é obrigatório.');
       return;
-
     }
 
     if (this.modoEdicao) {
-
       this.especialidadeService
-        .atualizar(
-          this.especialidadeNova.id,
-          this.especialidadeNova
-        )
+        .atualizar(this.especialidadeNova.id, this.especialidadeNova)
         .subscribe({
-
-          next: (especialidadeAtualizada) => {
-
-            const index =
-              this.especialidades.findIndex(
-
-                e =>
-                  e.id ===
-                  especialidadeAtualizada.id
-
-              );
-
+          next: (atualizada) => {
+            const index = this.especialidades.findIndex(e => e.id === atualizada.id);
             if (index !== -1) {
-
-              this.especialidades[index] =
-                especialidadeAtualizada;
-
+              this.especialidades[index] = atualizada;
             }
-
             this.fecharFormulario();
-
             this.cdr.detectChanges();
-
+          },
+          error: (erro) => {
+            console.error('Erro ao atualizar especialidade', erro);
           }
-
         });
-
     } else {
-
       this.especialidadeService
         .cadastrar(this.especialidadeNova)
         .subscribe({
-
-          next: (novaEspecialidade) => {
-
-            this.especialidades.push(
-              novaEspecialidade
-            );
-
+          next: (nova) => {
+            this.especialidades.push(nova);
             this.fecharFormulario();
-
             this.cdr.detectChanges();
-
+          },
+          error: (erro) => {
+            console.error('Erro ao cadastrar especialidade', erro);
           }
-
         });
-
     }
-
   }
-
 }
