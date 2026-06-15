@@ -22,30 +22,30 @@
       </div>
     }
 
-    @if (mostrarFormulario) {
-      <div class="overlay">
-        <div class="modal">
-          <h2>{{ modoEdicao ? 'Editar Paciente' : 'Novo Paciente' }}</h2>
+  </div> @if (mostrarFormulario) {
+    <div class="overlay">
+      <div class="modal">
+        <h2>{{ modoEdicao ? 'Editar Paciente' : 'Novo Paciente' }}</h2>
 
-          <input type="text" placeholder="Nome" [(ngModel)]="pacienteNovo.nome">
-          <input type="text" placeholder="CPF" [(ngModel)]="pacienteNovo.cpf">
-          <input type="text" placeholder="Email" [(ngModel)]="pacienteNovo.email">
-          <input type="text" placeholder="Telefone" [(ngModel)]="pacienteNovo.telefone">
+        <input type="text" placeholder="Nome" [(ngModel)]="pacienteNovo.nome">
+        <input type="text" placeholder="CPF" [(ngModel)]="pacienteNovo.cpf">
+        <input type="text" placeholder="Email" [(ngModel)]="pacienteNovo.email">
+        <input type="text" placeholder="Telefone" [(ngModel)]="pacienteNovo.telefone">
 
-          <div class="acoes-modal">
-            <button class="btn-salvar" (click)="salvarPaciente()">
-              Salvar
-            </button>
-            <button class="btn-cancelar" (click)="fecharFormulario()">
-              Cancelar
-            </button>
-          </div>
+        <div class="acoes-modal">
+          <button class="btn-salvar" (click)="salvarPaciente()">
+            Salvar
+          </button>
+          <button class="btn-cancelar" (click)="fecharFormulario()">
+            Cancelar
+          </button>
         </div>
       </div>
-    }
-  </div>
+    </div>
+  }
 
   <div class="card-tabela">
+      <div class="tabela-scroll">
     <table>
       <thead>
         <tr>
@@ -87,5 +87,6 @@
       </tbody>
     </table>
   </div>
-
 </div>
+
+</div> 

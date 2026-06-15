@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule, isPlatformBrowser } from '@angular/common'; 
 import { ConsultaService } from './services/consulta';
 import { Consulta } from './models/consulta';
 
@@ -14,12 +14,16 @@ import { Consulta } from './models/consulta';
 export class App implements OnInit {
   consultas: Consulta[] = [];
   usuarioLogado: any = null;
+  
+  //ADICIONE ESTA VARIÁVEL PARA CONTROLAR O MODAL
+  exibirModalLogin: boolean = false; 
+
+  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private consultaService: ConsultaService,
     private router: Router
   ) {
-    // Escuta as mudanças de rota para atualizar o menu lateral assim que o login for feito
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.atualizarUsuario();
@@ -30,10 +34,8 @@ export class App implements OnInit {
   ngOnInit(): void {
     this.atualizarUsuario();
     
-    // Deixamos a listagem de consultas aqui caso você use globalmente
     this.consultaService.listar().subscribe({
       next: (dados) => {
-        console.log(dados);
         this.consultas = dados;
       },
       error: (erro) => {
@@ -42,20 +44,32 @@ export class App implements OnInit {
     });
   }
 
-  // Busca as informações atualizadas do localStorage
-  atualizarUsuario(): void {
-    const dados = localStorage.getItem('usuario');
-    if (dados) {
-      this.usuarioLogado = JSON.parse(dados);
-    } else {
-      this.usuarioLogado = null;
+atualizarUsuario(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const dados = localStorage.getItem('usuario');
+      
+      if (dados) {
+        this.usuarioLogado = JSON.parse(dados);
+      } else {
+        this.usuarioLogado = null;
+        
+        //  Se não estiver logado, força a URL a mudar para /login
+        // Isso faz o <router-outlet> do meu @else desenhar a tela de login na hora!
+        if (this.router.url !== '/login') {
+          this.router.navigate(['/login']);
+        }
+      }
     }
   }
 
-  // Função para deslogar do sistema
   sair(): void {
-    localStorage.removeItem('usuario');
+  if (isPlatformBrowser(this.platformId)) {
+
+    localStorage.clear();
+
     this.usuarioLogado = null;
+
     this.router.navigate(['/login']);
   }
+}
 }

@@ -1,9 +1,11 @@
+
 .pagina {
     display: flex;
     flex-direction: column;
     gap: 25px;
-
-    height: calc(100vh - 220px);
+    padding: 0 40px 30px 40px;
+    width: 100%;       
+    box-sizing: border-box;
 }
 
 .cards-topo {
@@ -101,28 +103,18 @@
 
 .card-tabela {
     background: white;
-
     border-radius: 18px;
-
     padding: 25px;
-
     box-shadow: 0 4px 15px rgba(0,0,0,.08);
-
-    display: flex;
-    flex-direction: column;
-
-    flex: 1;
-    min-height: 0;
-
-    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .tabela-scroll {
-    flex: 1;
-    min-height: 0;
-
+    max-height: calc(100vh - 350px);
     overflow-y: auto;
 }
+
 
 table {
 
@@ -133,10 +125,12 @@ table {
 }
 
 thead {
-
     background: #FFF59D;
-
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
+
 
 th {
 

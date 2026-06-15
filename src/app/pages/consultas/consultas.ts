@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 import { Consulta } from '../../models/consulta';
 import { Paciente } from '../../models/paciente';
@@ -8,7 +8,9 @@ import { Dentista } from '../../models/dentista';
 
 import { ConsultaService } from '../../services/consulta';
 import { PacienteService } from '../../services/paciente';
-import { DentistaService } from '../../services/dentista';
+import { DentistaService } from '../../services/dentista';7
+
+
 
 @Component({
   selector: 'app-consultas',
@@ -19,10 +21,13 @@ import { DentistaService } from '../../services/dentista';
 })
 export class Consultas implements OnInit {
 
+  private platformId = inject(PLATFORM_ID);
+
   consultas: Consulta[] = [];
   pacientes: Paciente[] = [];
   dentistas: Dentista[] = [];
   mostrarFormulario = false;
+  
 
   totalAgendadas = 0;
   totalConcluidas = 0;
@@ -32,6 +37,7 @@ export class Consultas implements OnInit {
   perfilUsuario = '';
   nomeUsuarioLogado = '';
   idDentistaLogado: number | null = null; // Guardará o ID do Dr. João no banco
+  
 
   consultaNova: any = {
     descricao: '',
@@ -71,12 +77,15 @@ export class Consultas implements OnInit {
   });
 }
 
-  carregarPerfil() {
-    const usuarioSalvo = localStorage.getItem('usuario');
-    if (usuarioSalvo) {
-      const usuario = JSON.parse(usuarioSalvo);
-      this.perfilUsuario = usuario.perfil;
-      this.nomeUsuarioLogado = usuario.nome; // Ex: "Dr. João"
+ carregarPerfil() {
+    // 🔐 Trava de segurança para o terminal do SSR ficar limpo:
+    if (isPlatformBrowser(this.platformId)) {
+      const usuarioSalvo = localStorage.getItem('usuario');
+      if (usuarioSalvo) {
+        const usuario = JSON.parse(usuarioSalvo);
+        this.perfilUsuario = usuario.perfil;
+        this.nomeUsuarioLogado = usuario.nome; 
+      }
     }
   }
 
@@ -126,17 +135,17 @@ carregarConsultas() {
   });
 }
 
-  abrirFormulario() {
+ abrirFormulario() {
     this.consultaNova = {
       descricao: '',
       status: 'AGENDADA',
       dataInicio: '',
       dataFim: '',
       paciente: { id: null },
-      dentista: { id: null }
+      dentista: { id: null } // Começa limpo para o ADMIN poder escolher
     };
 
-    // Se for DENTISTA, pré-seleciona e amarra o ID dele no formulário
+    // Se for DENTISTA, aí sim mantém a trava automática do ID dele
     if (this.ehDentista() && this.idDentistaLogado !== null) {
       this.consultaNova.dentista.id = this.idDentistaLogado;
     }

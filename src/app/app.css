@@ -7,11 +7,9 @@
 .conteudo-principal {
     flex-grow: 1;
     background: #F4F6F8;
-
-    padding: 30px 40px;
-
-    overflow: hidden;
-
+    padding: 0 40px 30px 40px;
+    overflow-y: auto; 
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -51,7 +49,7 @@
     display: flex;
     width: 100vw;
     height: 100vh;
-    overflow: hidden; /* Impede a página de descer para baixo */
+    overflow: hidden;
 }
 
 
@@ -97,39 +95,32 @@ a:hover {
 
 
 .topbar {
-       background: white;
 
+    background: white;
     height: 80px;
-
     border-radius: 16px;
-
     padding: 0 30px;
-
-    margin-bottom: 35px;
-
+    margin-top: 30px;
+    margin-bottom: 20px;
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
+    width: 100%;
+    box-sizing: border-box;
     box-shadow: 0 4px 15px rgba(0,0,0,.08);
 }
 
 .campo-busca {
 
-    width: 40%;
-
+    width: 600px;
+    max-width: 60%;
     height: 42px;
-
     padding: 0 15px;
-
     border: 1px solid #E2E8F0;
-
     border-radius: 10px;
-
     outline: none;
 }
+
 
 .campo-busca:focus {
     border-color: #FFF59D;

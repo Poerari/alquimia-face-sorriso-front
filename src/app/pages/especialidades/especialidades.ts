@@ -44,7 +44,10 @@ export class Especialidades implements OnInit {
 
   // Verifica se o usuário logado possui restrição de escrita nesta tela
   ehSomenteLeitura(): boolean {
-    return this.perfilUsuario === 'DENTISTA';
+    return (
+    this.perfilUsuario === 'DENTISTA' ||
+    this.perfilUsuario === 'RECEPCIONISTA'
+      );
   }
 
   carregarEspecialidades() {

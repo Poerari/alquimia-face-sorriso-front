@@ -60,7 +60,10 @@ export class Dentistas implements OnInit {
 
   // Helper para verificar se o usuário atual é DENTISTA (somente leitura nesta tela)
   ehSomenteLeitura(): boolean {
-    return this.perfilUsuario === 'DENTISTA';
+    return (
+    this.perfilUsuario === 'DENTISTA' ||
+    this.perfilUsuario === 'RECEPCIONISTA'
+    );
   }
 
   carregarDentistas() {
