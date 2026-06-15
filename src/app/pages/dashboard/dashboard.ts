@@ -28,6 +28,7 @@ export class Dashboard implements OnInit, OnDestroy {
   consultasHoje = 0;
   saudacao = '';
   dataAtual = '';
+  nomeUsuario = ' ';
 
   graficoEspecialidades!: Chart;
 
@@ -59,14 +60,35 @@ export class Dashboard implements OnInit, OnDestroy {
     this.definirSaudacao();
     this.carregarTotais();
 
+    if (isPlatformBrowser(this.platformId)) {
+      // Tenta buscar o nome direto do localStorage ou sessionStorage
+      const usuarioObj = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
+      const nomeDireto = localStorage.getItem('nome') || sessionStorage.getItem('nome');
+
+      if (usuarioObj) {
+        try {
+          // Se o dado foi salvo como um objeto JSON, extrai a propriedade do nome
+          const usuario = JSON.parse(usuarioObj);
+          this.nomeUsuario = usuario.nome || usuario.nomeUsuario || 'Usuário';
+        } catch (e) {
+          this.nomeUsuario = usuarioObj;
+        }
+      } else if (nomeDireto) {
+        
+        this.nomeUsuario = nomeDireto;
+      } else {
+        
+        this.nomeUsuario = 'Usuário';
+      }
+    }
+
     this.consultaService.listar().subscribe({
       next: (dados) => {
         if (dados) {
           this.todasConsultas = dados;
           this.totalConsultas = dados.length;
           
-          // Limita a exibição da tabela para não quebrar a proporção do layout
-          this.consultasRecentes = dados.slice(0, 3);
+          this.consultasRecentes = dados.slice(0, 4);
 
           this.gerarGraficoEspecialidades();
           this.gerarGraficoStatus();

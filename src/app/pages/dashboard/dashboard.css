@@ -1,11 +1,12 @@
 .dashboard-container {
     display: flex;
     gap: 20px;
-    align-items: flex-start;
+    align-items: stretch;
     width: 100%;
     max-width: 100%;
     
     box-sizing: border-box;
+    padding-bottom: 40px;
 }
 
 .coluna-esquerda {
@@ -13,7 +14,6 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    
 }
 
 .coluna-direita {
@@ -21,7 +21,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    
+    min-height: calc(100vh - 220px);
 }
 
 .cards {
@@ -59,6 +59,9 @@
 
 .secao-dashboard {
     margin-top: 5px; 
+    flex: 1;            
+    display: flex;      
+    flex-direction: column; 
 }
 
 .cabecalho-secao {
@@ -77,8 +80,7 @@
     padding: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,.08);
     flex: 1; 
-    overflow-y: auto; 
-    max-height: calc(100vh - 430px);
+    overflow-y: auto;
 }
 
 table {
@@ -110,7 +112,7 @@ tbody tr:hover {
     background: #FFFDE7;
 }
 
-/* CLASSES DE CORES DOS STATUS COMPATÍVEIS COM A TELA DE CONSULTAS */
+
 .status-agendada {
     background: #FFF59D;
     color: #744210;
@@ -189,13 +191,31 @@ tbody tr:hover {
 }
 
 .card-grafico-linha {
+    flex: 1;
     background: white;
     border-radius: 18px;
-    height: 260px;
     padding: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.card-grafico-linha h2 {
+    margin-bottom: 15px;
 }
 
 .card-grafico-linha canvas {
-    max-height: 190px !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+.container-do-grafico {
+    flex: 1;
+    position: relative;
+    width: 100%;
 }

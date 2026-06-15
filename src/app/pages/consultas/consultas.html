@@ -47,7 +47,8 @@
             <th>Paciente</th>
             <th>Dentista</th>
             <th>Data</th>
-            <th>Hora</th>
+            <th>Início</th>
+            <th>Fim</th>
             <th>Status</th>
             <th>Ações</th>
           </tr>
@@ -61,6 +62,7 @@
               <td>{{ consulta.dentista?.nome }}</td>
               <td>{{ consulta.dataInicio | date:'dd/MM/yyyy' }}</td>
               <td>{{ consulta.dataInicio | date:'HH:mm' }}</td>
+              <td>{{ consulta.dataFim | date:'HH:mm' }}</td>
 
               <td>
                 @if (consulta.status === 'AGENDADA') {
@@ -88,7 +90,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="7" class="sem-registros">
+              <td colspan="8" class="sem-registros">
                 Nenhuma consulta encontrada.
               </td>
             </tr>
@@ -124,7 +126,21 @@
         id="dataInicio"
         type="datetime-local"
         [(ngModel)]="consultaNova.dataInicio"
+        [min]="dataMinima"
         required>
+
+         <div
+        *ngIf="consultaNova.dataInicio"
+        class="info-duracao">
+
+        <strong>Horário de término:</strong>
+        {{ calcularFimConsulta() | date:'HH:mm' }}
+
+        <br>
+
+        <small>Duração padrão: 15 minutos</small>
+
+      </div>
 
       <input
         type="text"
@@ -139,6 +155,18 @@
           <option value="CANCELADA">Cancelada</option>
         </select>
       </div>
+
+      <div *ngIf="consultaNova.status === 'CANCELADA'">
+
+      <label>Motivo do Cancelamento</label>
+
+      <textarea
+        rows="3"
+        [(ngModel)]="consultaNova.motivoCancelamento"
+        placeholder="Informe o motivo do cancelamento">
+      </textarea>
+
+    </div>
 
       <div class="acoes-modal">
         <button class="btn-salvar" (click)="salvarConsulta()">

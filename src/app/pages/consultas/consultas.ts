@@ -37,7 +37,7 @@ export class Consultas implements OnInit {
   perfilUsuario = '';
   nomeUsuarioLogado = '';
   idDentistaLogado: number | null = null; // Guardará o ID do Dr. João no banco
-  
+  dataMinima = new Date().toISOString().slice(0, 16); //Data passada bloqueada
 
   consultaNova: any = {
     descricao: '',
@@ -192,8 +192,16 @@ carregarConsultas() {
             this.fecharFormulario();
           },
           error: (erro) => {
-            alert(erro.error?.message || 'Não foi possível salvar a consulta.');
+
+          console.error(erro);
+
+          if (erro.error?.message) {
+            alert(erro.error.message);
+          } else {
+            alert('Não foi possível salvar a consulta.');
           }
+
+        }
         });
     }
   }
@@ -229,4 +237,17 @@ carregarConsultas() {
     this.totalAtrasadas = this.consultas.filter(c => c.status === 'ATRASADA').length;
     this.totalCanceladas = this.consultas.filter(c => c.status === 'CANCELADA').length;
   }
+
+  calcularFimConsulta(): Date {
+
+  const inicio = new Date(
+    this.consultaNova.dataInicio
+  );
+
+  inicio.setMinutes(
+    inicio.getMinutes() + 15
+  );
+
+  return inicio;
+}
 }

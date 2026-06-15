@@ -3,9 +3,9 @@
   <div class="coluna-esquerda">
     
     <div class="card-saudacao">
-      <h2>{{ saudacao }}, Gabriela 👋</h2>
-      <p>Hoje é {{ dataAtual }}</p>
-    </div>
+  <h2>{{ saudacao }}, {{ nomeUsuario }} 👋</h2>
+  <p>Hoje é {{ dataAtual }}</p>
+</div>
 
     <div class="cards">
       <div class="card">
@@ -71,24 +71,24 @@
 
   <div class="coluna-direita">
     
-    <div class="card-grafico-redondo">
-      <div class="cabecalho-secao">
-        <h2>Especialidades Mais Agendadas</h2>
-      </div>
-      <div style="position: relative; height: 190px; width: 100%;">
-        <canvas id="graficoEspecialidades"></canvas>
-      </div>
+  <div class="card-grafico-redondo">
+    <div class="cabecalho-secao">
+      <h2>Especialidades Mais Agendadas</h2>
     </div>
-
-    <div class="card-grafico-linha">
-      <div class="cabecalho-secao">
-        <h2>Consultas por Status</h2>
-      </div>
-      <div style="position: relative; height: 190px; width: 100%;">
-        <canvas id="graficoStatus"></canvas>
-      </div>
+    <div style="position: relative; height: 190px; width: 100%;">
+      <canvas id="graficoEspecialidades"></canvas>
     </div>
-
   </div>
+
+  <div class="card-grafico-linha">
+    <div class="cabecalho-secao">
+      <h2>Consultas por Status</h2>
+    </div>
+    <div class="container-do-grafico">
+      <canvas id="graficoStatus"></canvas>
+    </div>
+  </div>
+
+</div>
 
 </div>

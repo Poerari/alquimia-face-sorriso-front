@@ -87,10 +87,9 @@ a:hover {
 .ativo {
     background-color: #FFF59D;
     color: #2D3748 !important;
-
+    border-left: 5px solid #E6C200;
+    border-radius: 0 12px 12px 0;
     font-weight: 700;
-
-    box-shadow: 0 4px 10px rgba(255,245,157,.4);
 }
 
 
