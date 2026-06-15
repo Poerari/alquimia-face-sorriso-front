@@ -98,17 +98,21 @@
         type="text"
         placeholder="CPF"
         [(ngModel)]="dentistaNovo.cpf"
+        (input)="formatarCpf($event)"
+        maxlength="14"
       >
 
       <input
         type="text"
-        placeholder="CRO"
+        placeholder="CRO 12345"
         [(ngModel)]="dentistaNovo.cro"
+        (input)="formatarCro($event)"
+        maxlength="11"
       >
 
       <input
         type="email"
-        placeholder="Email"
+        placeholder="exemplo@gmail.com"
         [(ngModel)]="dentistaNovo.email"
       >
 
@@ -122,7 +126,7 @@
 
             <input
               type="checkbox"
-              [checked]="possuiEspecialidade(esp.id)"
+              [checked]="esp.id ? possuiEspecialidade(esp.id) : false"
               (change)="toggleEspecialidade(esp)"
             >
 
