@@ -1,75 +1,50 @@
-import { Component, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
-import { CommonModule, isPlatformBrowser } from '@angular/common'; 
-import { ConsultaService } from './services/consulta';
-import { Consulta } from './models/consulta';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
+
 export class App implements OnInit {
-  consultas: Consulta[] = [];
   usuarioLogado: any = null;
-  
-  //ADICIONE ESTA VARIÁVEL PARA CONTROLAR O MODAL
-  exibirModalLogin: boolean = false; 
+  naTelaDeLogin: boolean = true;
 
-  private platformId = inject(PLATFORM_ID);
-
-  constructor(
-    private consultaService: ConsultaService,
-    private router: Router
-  ) {
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.atualizarUsuario();
-      }
+  constructor(private router: Router) {
+    
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.naTelaDeLogin = event.url.includes('/login') || event.url === '/';
+      this.verificarDadosUsuario();
     });
   }
 
   ngOnInit(): void {
-    this.atualizarUsuario();
-    
-    this.consultaService.listar().subscribe({
-      next: (dados) => {
-        this.consultas = dados;
-      },
-      error: (erro) => {
-        console.error('Erro ao buscar consultas', erro);
-      }
-    });
+    this.verificarDadosUsuario();
   }
 
-atualizarUsuario(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const dados = localStorage.getItem('usuario');
-      
-      if (dados) {
-        this.usuarioLogado = JSON.parse(dados);
-      } else {
-        this.usuarioLogado = null;
-        
-        //  Se não estiver logado, força a URL a mudar para /login
-        // Isso faz o <router-outlet> do meu @else desenhar a tela de login na hora!
-        if (this.router.url !== '/login') {
-          this.router.navigate(['/login']);
-        }
-      }
+  verificarDadosUsuario(): void {
+    const dados = localStorage.getItem('usuario');
+    if (dados) {
+      this.usuarioLogado = JSON.parse(dados);
+    } else {
+      this.usuarioLogado = null;
     }
   }
 
+  deveExibirPainel(): boolean {
+    return this.usuarioLogado !== null && !this.naTelaDeLogin;
+  }
+
   sair(): void {
-  if (isPlatformBrowser(this.platformId)) {
-
-    localStorage.clear();
-
+    localStorage.removeItem('usuario');
     this.usuarioLogado = null;
-
     this.router.navigate(['/login']);
   }
-}
 }
