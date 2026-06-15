@@ -34,7 +34,6 @@
             <th>CPF</th>
             <th>Email</th>
             <th>Perfil</th>
-            <th>Status</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -45,20 +44,9 @@
             <tr>
               <td>{{ usuario?.id }}</td>
               <td>{{ usuario?.nome }}</td>
-              <td>{{ usuario?.cpf }}</td>
+              <td>{{ formatarCpfExibicao(usuario?.cpf) }}</td>
               <td>{{ usuario?.email }}</td>
               <td>{{ usuario?.perfil }}</td>
-              <td>
-                @if (usuario.ativo) {
-                  <span class="status-ativo">
-                    Ativo
-                  </span>
-                } @else {
-                  <span class="status-inativo">
-                    Inativo
-                  </span>
-                }
-              </td>
               <td>
                 <button
                   class="btn-editar"
@@ -76,8 +64,9 @@
           @empty {
             <tr>
               <td
-                colspan="7"
-                class="sem-registros">
+                colspan="6"
+                class="sem-registros"
+                style="text-align:center; color:#718096;">
                 Nenhum usuário encontrado.
               </td>
             </tr>
@@ -100,6 +89,18 @@
           {{ usuarioNovo.id ? 'Editar Usuário' : 'Novo Usuário' }}
         </h2>
 
+        @if (!isEditando) {
+          <div class="campo-selecao" style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;">
+            <label style="font-weight: 500; font-size: 14px; color: #4a5568;">Vincular a um Dentista Cadastrado:</label>
+            <select (change)="selecionarDentista($event)" style="padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px;">
+              <option value="">-- Escolha um Dentista se aplicável --</option>
+              @for (dentista of dentistas; track dentista.id) {
+                <option [value]="dentista.id">{{ dentista.nome }} ({{ dentista.cro }})</option>
+              }
+            </select>
+          </div>
+        }
+
         <input
           type="text"
           placeholder="Nome"
@@ -108,7 +109,9 @@
         <input
           type="text"
           placeholder="CPF"
-          [(ngModel)]="usuarioNovo.cpf">
+          [(ngModel)]="usuarioNovo.cpf"
+          (input)="formatarCpfInput($event)"
+          maxlength="14">
 
         <input
           type="email"
@@ -135,21 +138,6 @@
             Dentista
           </option>
         </select>
-
-        @if (usuarioNovo.id) {
-          <div>
-            <label>Status</label>
-            <select
-              [(ngModel)]="usuarioNovo.ativo">
-              <option [ngValue]="true">
-                Ativo
-              </option>
-              <option [ngValue]="false">
-                Inativo
-              </option>
-            </select>
-          </div>
-        }
 
         <div class="acoes-modal">
           <button
