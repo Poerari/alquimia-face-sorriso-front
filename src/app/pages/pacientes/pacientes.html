@@ -22,15 +22,33 @@
       </div>
     }
 
-  </div> @if (mostrarFormulario) {
+  </div> 
+
+  @if (mostrarFormulario) {
     <div class="overlay">
       <div class="modal">
         <h2>{{ modoEdicao ? 'Editar Paciente' : 'Novo Paciente' }}</h2>
 
         <input type="text" placeholder="Nome" [(ngModel)]="pacienteNovo.nome">
-        <input type="text" placeholder="CPF" [(ngModel)]="pacienteNovo.cpf">
-        <input type="text" placeholder="Email" [(ngModel)]="pacienteNovo.email">
-        <input type="text" placeholder="Telefone" [(ngModel)]="pacienteNovo.telefone">
+        
+        <input 
+          type="text" 
+          [(ngModel)]="pacienteNovo.cpf" 
+          (input)="formatarCpf($event)" 
+          maxlength="14" 
+          placeholder="000.000.000-00">
+        
+        <input 
+          type="email" 
+          placeholder="exemplo@gmail.com" 
+          [(ngModel)]="pacienteNovo.email">
+        
+        <input 
+          type="text" 
+          [(ngModel)]="pacienteNovo.telefone" 
+          (input)="formatarTelefone($event)" 
+          maxlength="15" 
+          placeholder="(41) 99999-9999">
 
         <div class="acoes-modal">
           <button class="btn-salvar" (click)="salvarPaciente()">
@@ -45,48 +63,48 @@
   }
 
   <div class="card-tabela">
-      <div class="tabela-scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>CPF</th>
-          <th>Email</th>
-          <th>Telefone</th>
-          @if (!ehSomenteLeitura()) {
-            <th>Ações</th>
-          }
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (paciente of pacientesFiltrados; track paciente.id) {
+    <div class="tabela-scroll">
+      <table>
+        <thead>
           <tr>
-            <td>{{ paciente?.id }}</td>
-            <td>{{ paciente?.nome }}</td>
-            <td>{{ paciente?.cpf }}</td>
-            <td>{{ paciente?.email }}</td>
-            <td>{{ paciente?.telefone }}</td>
-            
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Email</th>
+            <th>Telefone</th>
             @if (!ehSomenteLeitura()) {
-              <td>
-                <button class="btn-editar" (click)="editarPaciente(paciente)">
-                  Editar
-                </button>
-              </td>
+              <th>Ações</th>
             }
           </tr>
-        } @empty {
-          <tr>
-            <td [attr.colspan]="ehSomenteLeitura() ? 5 : 6" style="text-align: center; padding: 20px;">
-              Nenhum paciente encontrado.
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
+        </thead>
 
-</div> 
+        <tbody>
+          @for (paciente of pacientesFiltrados; track paciente.id) {
+            <tr>
+              <td>{{ paciente?.id }}</td>
+              <td>{{ paciente?.nome }}</td>
+              <td>{{ paciente?.cpf }}</td>
+              <td>{{ paciente?.email }}</td>
+              <td>{{ paciente?.telefone }}</td>
+              
+              @if (!ehSomenteLeitura()) {
+                <td>
+                  <button class="btn-editar" (click)="editarPaciente(paciente)">
+                    Editar
+                  </button>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td [attr.colspan]="ehSomenteLeitura() ? 5 : 6" style="text-align: center; padding: 20px;">
+                Nenhum paciente encontrado.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

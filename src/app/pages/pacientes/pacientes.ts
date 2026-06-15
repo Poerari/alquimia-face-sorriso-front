@@ -70,8 +70,42 @@ export class Pacientes implements OnInit {
     });
   }
 
+  // Máscara dinâmica de CPF
+  formatarCpf(event: any): void {
+    let valor = event.target.value.replace(/\D/g, '');
+
+    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+    valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+    valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+    this.pacienteNovo.cpf = valor;
+  }
+
+  // Máscara dinâmica de Telefone (Suporta Fixo com 10 dígitos e Celular com 11 dígitos)
+  formatarTelefone(event: any): void {
+    let valor = event.target.value.replace(/\D/g, '');
+    
+    // Aplica o parêntese no DDD
+    valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2');
+    
+    // Se tiver mais de 13 caracteres com a máscara, assume formato de celular celular: (XX) XXXXX-XXXX
+    if (valor.length > 13) {
+      valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
+    } else {
+      // Caso contrário, assume formato fixo: (XX) XXXX-XXXX
+      valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+    }
+    
+    this.pacienteNovo.telefone = valor;
+  }
+
+  // Validação Regex para garantir a estrutura do e-mail antes do envio
+  validarEmail(email: string): boolean {
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regexEmail.test(email);
+  }
+
   abrirFormulario() {
-    // Se por acaso tentar forçar a abertura por funções, o sistema bloqueia
     if (this.ehSomenteLeitura()) return;
 
     this.modoEdicao = false;
@@ -117,25 +151,40 @@ export class Pacientes implements OnInit {
       return;
     }
 
+    // Validação estrutural do e-mail
+    if (this.pacienteNovo.email && !this.validarEmail(this.pacienteNovo.email)) {
+      alert('Por favor, insira um e-mail válido (exemplo: usuario@gmail.com).');
+      return;
+    }
+
+    // CRIA UM OBJETO LIMPO PARA O BACK-END (Remove pontos, traços e parênteses)
+    const dadosParaSalvar = {
+      ...this.pacienteNovo,
+      cpf: this.pacienteNovo.cpf.replace(/\D/g, ''), // Remove tudo que não for número
+      telefone: this.pacienteNovo.telefone ? this.pacienteNovo.telefone.replace(/\D/g, '') : '' // Remove tudo que não for número
+    };
+
     if (this.modoEdicao) {
       this.pacienteService
-        .atualizar(this.pacienteNovo.id, this.pacienteNovo)
+        .atualizar(dadosParaSalvar.id, dadosParaSalvar)
         .subscribe({
           next: (pacienteAtualizado) => {
             const index = this.pacientes.findIndex(p => p.id === pacienteAtualizado.id);
             if (index !== -1) {
+              // Mantém os dados atualizados na lista
               this.pacientes[index] = pacienteAtualizado;
             }
             this.fecharFormulario();
             this.cdr.detectChanges();
           },
           error: (erro) => {
-            console.error('Erro ao atualizar paciente', erro);
+            // Exibe a mensagem exata enviada pela validação do back-end
+            alert(erro.error?.message || 'Erro ao atualizar paciente.');
           }
         });
     } else {
       this.pacienteService
-        .cadastrar(this.pacienteNovo)
+        .cadastrar(dadosParaSalvar)
         .subscribe({
           next: (novoPaciente) => {
             this.pacientes.push(novoPaciente);
@@ -143,7 +192,8 @@ export class Pacientes implements OnInit {
             this.cdr.detectChanges();
           },
           error: (erro) => {
-            console.error('Erro ao cadastrar paciente', erro);
+            // Exibe a mensagem exata enviada pela validação do back-end
+            alert(erro.error?.message || 'Erro ao salvar paciente.');
           }
         });
     }
