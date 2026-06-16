@@ -1,59 +1,153 @@
-# AlquimiaFaceSorrisoFront
+# 🦷 Alquimia Face Sorriso - Front-end
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.0.
+Sistema de gerenciamento para clínica odontológica, desenvolvido em **Angular**, com foco em organização de pacientes, dentistas, especialidades e consultas.
 
-## Development server
+---
 
-To start a local development server, run:
+# 🚀 Tecnologias utilizadas
+
+* Angular
+* TypeScript
+* HTML5 + CSS3
+* Consumo de API REST (Spring Boot)
+
+---
+
+# ⚙️ Como executar o projeto
+
+## Pré-requisitos
+
+Antes de iniciar, você precisa ter instalado:
+
+* Node.js (versão LTS recomendada)
+* Angular CLI
+
+## Instalar Angular CLI (caso não tenha)
+
+```bash
+npm install -g @angular/cli
+```
+
+## Instalação do projeto
+
+### Clone o repositório
+
+```bash
+git clone https://github.com/Poerari/alquimia-face-sorriso-front.git
+```
+
+### Acesse a pasta do projeto
+
+```bash
+cd alquimia-face-sorriso-front
+```
+
+### Instale as dependências
+
+```bash
+npm install
+```
+
+## Executar o projeto
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+O sistema estará disponível em:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
+# Integração com o Backend
+
+Este projeto consome uma API desenvolvida em Spring Boot.
+
+##  URL da API
+
+```text
+http://localhost:8080
 ```
 
-## Building
+⚠️ O backend deve estar em execução para o sistema funcionar corretamente.
 
-To build the project run:
+---
 
-```bash
-ng build
+# Funcionalidades do sistema
+
+## 🏠 Dashboard
+
+* Visão geral do sistema
+* Total de pacientes, dentistas e consultas
+
+## 👤 Pacientes
+
+* Cadastro de pacientes
+* Listagem
+* Edição
+* Exclusão
+
+## 🦷 Dentistas
+
+* Cadastro de dentistas
+* Associação com especialidades
+* Gerenciamento
+
+## 🧩 Especialidades
+
+* Cadastro de especialidades odontológicas
+
+## 📅 Consultas
+
+* Agendamento de consultas
+* Seleção de paciente e dentista
+* Definição de data e horário
+
+---
+
+# Fluxo da aplicação
+
+```text
+Dashboard → Módulos → CRUD completo (Criar, Listar, Editar, Excluir)
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Exemplo:
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```text
+Pacientes → Novo paciente → Salvar → Lista atualizada
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+# 📸 Evidências do sistema
 
-```bash
-ng e2e
-```
+Adicionar capturas de tela das principais telas:
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
+<img src="docs/Tela_login.png" alt="Tela_Login" width="300">
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<img src="docs/Teladash.png" alt="Teladash" width="300">
+
+<img src="docs/Telapacientes.png" alt="Telapacientes" width="300">
+
+<img src="docs/Teladentista.png" alt="Teladentista" width="300">
+
+<img src="docs/Telaespecialidas.png" alt="Telaespecialidas" width="300">
+
+<img src="docs/Telarelatorios.png" alt="Telarelatorios" width="300">
+
+
+# 👩‍💻 Desenvolvedora 
+
+Gabriela Poerari Baptista
+
+---
+
+# 📌 Observações finais
+
+* O sistema depende do backend rodando na porta 8080.
+* Sem o backend ativo, os dados não serão carregados.
+* Certifique-se de configurar corretamente a URL da API no Angular.
