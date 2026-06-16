@@ -7,38 +7,28 @@ import { Consulta } from '../models/consulta';
   providedIn: 'root'
 })
 export class ConsultaService {
-
-  private api = 'http://localhost:8080/consultas';
+  
+  private apiUrl = 'http://localhost:8080/api/consultas';
 
   constructor(private http: HttpClient) {}
 
   listar(): Observable<Consulta[]> {
-    return this.http.get<Consulta[]>(this.api);
+    return this.http.get<Consulta[]>(this.apiUrl);
   }
 
-  cadastrar(consulta: any): Observable<any> {
-  return this.http.post<any>(
-    this.api,
-    consulta
-  );
+  buscarPorId(id: number): Observable<Consulta> {
+    return this.http.get<Consulta>(`${this.apiUrl}/${id}`);
   }
 
-  atualizar(
-  id: number,
-  consulta: Consulta
-): Observable<Consulta> {
+  cadastrar(consulta: any): Observable<Consulta> {
+    return this.http.post<Consulta>(this.apiUrl, consulta);
+  }
 
-  return this.http.put<Consulta>(
-    `${this.api}/${id}`,
-    consulta
-  );
-}
+  atualizar(id: number, consulta: any): Observable<Consulta> {
+    return this.http.put<Consulta>(`${this.apiUrl}/${id}`, consulta);
+  }
 
-excluir(id: number): Observable<void> {
-
-  return this.http.delete<void>(
-    `${this.api}/${id}`
-  );
-
-}
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

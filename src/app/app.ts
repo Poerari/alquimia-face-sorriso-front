@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Inject } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
@@ -15,36 +18,43 @@ export class App implements OnInit {
   usuarioLogado: any = null;
   naTelaDeLogin: boolean = true;
 
-  constructor(private router: Router) {
-    
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.naTelaDeLogin = event.url.includes('/login') || event.url === '/';
-      this.verificarDadosUsuario();
-    });
-  }
-
+  constructor(
+  private router: Router,
+  @Inject(PLATFORM_ID) private platformId: Object
+) {
+  this.router.events.pipe(
+    filter(event => event instanceof NavigationEnd)
+  ).subscribe((event: any) => {
+    this.naTelaDeLogin = event.url.includes('/login') || event.url === '/';
+    this.verificarDadosUsuario();
+  });
+}
   ngOnInit(): void {
     this.verificarDadosUsuario();
   }
 
   verificarDadosUsuario(): void {
+  if (isPlatformBrowser(this.platformId)) {
     const dados = localStorage.getItem('usuario');
+
     if (dados) {
       this.usuarioLogado = JSON.parse(dados);
     } else {
       this.usuarioLogado = null;
     }
   }
+}
 
   deveExibirPainel(): boolean {
     return this.usuarioLogado !== null && !this.naTelaDeLogin;
   }
 
   sair(): void {
+  if (isPlatformBrowser(this.platformId)) {
     localStorage.removeItem('usuario');
-    this.usuarioLogado = null;
-    this.router.navigate(['/login']);
   }
+
+  this.usuarioLogado = null;
+  this.router.navigate(['/login']);
+}
 }

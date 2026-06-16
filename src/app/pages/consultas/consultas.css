@@ -218,9 +218,9 @@ tbody tr:hover {
 }
 
 .btn-editar {
-
-    background: #FFF59D;
-
+    background: #FFF59D;     
+                
+    color: black;
     border: none;
 
     padding: 8px 14px;
@@ -229,9 +229,12 @@ tbody tr:hover {
 
     cursor: pointer;
 
-    font-weight: 600;
+    margin-left: 8px;
 
+    font-weight: 600;
 }
+
+
 
 .overlay {
 
@@ -382,4 +385,20 @@ textarea {
 
     font-size: 14px;
 
+}
+
+.container-especialidades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag-especialidade {
+    background-color: #E2E8F0;
+    color: #4A5568;            
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;        
+    display: inline-block;
+    white-space: nowrap;
 }

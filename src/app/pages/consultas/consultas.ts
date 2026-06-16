@@ -1,16 +1,17 @@
+
 import { Component, OnInit, ChangeDetectorRef, inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
+
 import { Consulta } from '../../models/consulta';
 import { Paciente } from '../../models/paciente';
 import { Dentista } from '../../models/dentista';
+import { EspecialidadeService } from '../../services/especialidade'; 
 
 import { ConsultaService } from '../../services/consulta';
 import { PacienteService } from '../../services/paciente';
-import { DentistaService } from '../../services/dentista';7
-
-
+import { DentistaService } from '../../services/dentista';
 
 @Component({
   selector: 'app-consultas',
@@ -20,14 +21,18 @@ import { DentistaService } from '../../services/dentista';7
   styleUrl: './consultas.css'
 })
 export class Consultas implements OnInit {
+  trackByConsulta(index: number, consulta: Consulta) {
+    return consulta.id;
+  }
 
   private platformId = inject(PLATFORM_ID);
 
   consultas: Consulta[] = [];
   pacientes: Paciente[] = [];
   dentistas: Dentista[] = [];
-  mostrarFormulario = false;
+  especialidades: any[] = []; // Lista global idêntica à de dentistas
   
+  mostrarFormulario = false;
 
   totalAgendadas = 0;
   totalConcluidas = 0;
@@ -36,8 +41,8 @@ export class Consultas implements OnInit {
 
   perfilUsuario = '';
   nomeUsuarioLogado = '';
-  idDentistaLogado: number | null = null; // Guardará o ID do Dr. João no banco
-  dataMinima = new Date().toISOString().slice(0, 16); //Data passada bloqueada
+  idDentistaLogado: number | null = null;
+  dataMinima = new Date().toISOString().slice(0, 16);
 
   consultaNova: any = {
     descricao: '',
@@ -45,40 +50,45 @@ export class Consultas implements OnInit {
     dataInicio: '',
     dataFim: '',
     paciente: { id: null },
-    dentista: { id: null }
+    dentista: { id: null },
+    especialidade: { id: null }
   };
 
   constructor(
     private consultaService: ConsultaService,
     private pacienteService: PacienteService,
     private dentistaService: DentistaService,
+    private especialidadeService: EspecialidadeService, 
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-  this.carregarPerfil();
-  
-  this.pacienteService.listar().subscribe({
-    next: (dados) => { this.pacientes = dados; }
-  });
+    this.carregarPerfil();
 
-  // Primeiro trazemos os dentistas para mapear quem está logado
-  this.dentistaService.listar().subscribe({
-    next: (dados) => {
-      this.dentistas = dados;
-      this.vincularIdDentista();
-      // Agora sim, com o ID devidamente mapeado, carregamos as consultas filtradas
-      this.carregarConsultas(); 
-    },
-    error: (erro) => {
-      console.error('Erro ao listar dentistas', erro);
-      this.carregarConsultas(); // Fallback caso a rota falhe
-    }
-  });
-}
+    this.pacienteService.listar().subscribe({
+      next: (dados) => { this.pacientes = dados; }
+    });
 
- carregarPerfil() {
-    // 🔐 Trava de segurança para o terminal do SSR ficar limpo:
+    // Carrega a lista global de especialidades logo no início
+    this.especialidadeService.listar().subscribe({
+      next: (dados) => { this.especialidades = dados; },
+      error: (erro) => console.error('Erro ao listar especialidades', erro)
+    });
+
+    this.dentistaService.listar().subscribe({
+      next: (dados) => {
+        this.dentistas = dados;
+        this.vincularIdDentista();
+        this.carregarConsultas(); 
+      },
+      error: (erro) => {
+        console.error('Erro ao listar dentistas', erro);
+        this.carregarConsultas();
+      }
+    });
+  }
+
+  carregarPerfil() {
     if (isPlatformBrowser(this.platformId)) {
       const usuarioSalvo = localStorage.getItem('usuario');
       if (usuarioSalvo) {
@@ -93,59 +103,67 @@ export class Consultas implements OnInit {
     return this.perfilUsuario === 'DENTISTA';
   }
 
-vincularIdDentista() {
-  if (this.ehDentista() && this.dentistas.length > 0) {
-    // Remove pontos e espaços extras para comparar apenas o texto essencial
-    const limparString = (txt: string) => txt.replace(/\./g, '').trim().toLowerCase();
-    
-    const nomeLogadoLimpo = limparString(this.nomeUsuarioLogado);
+  vincularIdDentista() {
+    if (this.ehDentista() && this.dentistas.length > 0) {
+      const limparString = (txt: string) => txt.replace(/\./g, '').trim().toLowerCase();
+      const nomeLogadoLimpo = limparString(this.nomeUsuarioLogado);
 
-    const correspondente = this.dentistas.find(d => 
-      limparString(d.nome) === nomeLogadoLimpo
-    );
+      const correspondente = this.dentistas.find(d => 
+        limparString(d.nome) === nomeLogadoLimpo
+      );
 
-    if (correspondente) {
-      this.idDentistaLogado = correspondente.id;
-      console.log('ID do Dentista Logado Vinculado com Sucesso:', this.idDentistaLogado);
-    } else {
-      console.warn('AVISO: Não foi encontrado nenhum dentista no banco com o nome:', this.nomeUsuarioLogado);
+      if (correspondente) {
+        this.idDentistaLogado = correspondente.id;
+      }
     }
   }
-}
 
-carregarConsultas() {
-  this.consultaService.listar().subscribe({
-    next: (dados) => {
-      console.log('Todas as consultas vindas do servidor:', dados);
+  carregarConsultas() {
+    this.consultaService.listar().subscribe({
+      next: (dados) => {
+        console.log('Dados brutos recebidos do backend:', dados);
+        const dadosBrutos = dados || [];
 
-      if (this.ehDentista() && this.idDentistaLogado !== null) {
-        // Filtra estritamente pelo ID mapeado
-        this.consultas = dados.filter(c => c.dentista?.id === this.idDentistaLogado);
-        console.log('Consultas filtradas para o dentista logado:', this.consultas);
-      } else {
-        this.consultas = dados;
+        // 🚀 CRUZA OS DADOS: Se o Java não trouxe o campo '.nome', o Angular busca na lista global pelo ID
+        this.consultas = dadosBrutos.map((consulta: any) => {
+          if (consulta.especialidade?.id && !consulta.especialidade.nome) {
+            const correspondente = this.especialidades.find(e => e.id === Number(consulta.especialidade.id));
+            if (correspondente) {
+              consulta.especialidade = { ...correspondente };
+            }
+          }
+          return consulta;
+        });
+
+        this.consultas.sort((a, b) => {
+          return new Date(b.dataInicio).getTime() - new Date(a.dataInicio).getTime();
+        });
+
+        this.atualizarIndicadores();
+        this.cdr.detectChanges();
+      },
+      error: (erro) => {
+        console.error('Erro de comunicação com o serviço de consultas:', erro);
       }
+    });
+  }
 
-      this.atualizarIndicadores();
-      this.cdr.detectChanges();
-    },
-    error: (erro) => {
-      console.error('Erro ao carregar consultas', erro);
-    }
-  });
-}
+  onDentistaChange() {
+    // Não limpa mais a especialidade ao trocar de dentista
+  }
 
- abrirFormulario() {
+  abrirFormulario() {
+    // Inicializa o objeto de forma limpa e explícita
     this.consultaNova = {
       descricao: '',
       status: 'AGENDADA',
       dataInicio: '',
       dataFim: '',
       paciente: { id: null },
-      dentista: { id: null } // Começa limpo para o ADMIN poder escolher
+      dentista: { id: null },
+      especialidade: { id: null }
     };
 
-    // Se for DENTISTA, aí sim mantém a trava automática do ID dele
     if (this.ehDentista() && this.idDentistaLogado !== null) {
       this.consultaNova.dentista.id = this.idDentistaLogado;
     }
@@ -165,69 +183,58 @@ carregarConsultas() {
     if (
       !this.consultaNova.paciente?.id ||
       !this.consultaNova.dentista?.id ||
+      !this.consultaNova.especialidade?.id ||
       !this.consultaNova.dataInicio
     ) {
       alert('Preencha todos os campos obrigatórios.');
       return;
     }
 
+    const dadosParaSalvar = {
+      ...this.consultaNova,
+      paciente: { id: Number(this.consultaNova.paciente.id) },
+      dentista: { id: Number(this.consultaNova.dentista.id) },
+      especialidade: { id: Number(this.consultaNova.especialidade.id) }
+    };
+
     if (this.consultaNova.id) {
-      this.consultaService
-        .atualizar(this.consultaNova.id, this.consultaNova)
-        .subscribe({
-          next: () => {
-            this.carregarConsultas();
-            this.fecharFormulario();
-          },
-          error: (erro) => {
-            console.error('Erro ao atualizar consulta', erro);
-          }
-        });
+      this.consultaService.atualizar(this.consultaNova.id, dadosParaSalvar).subscribe({
+        next: () => { this.carregarConsultas(); this.fecharFormulario(); },
+        error: (erro) => console.error('Erro ao atualizar consulta', erro)
+      });
     } else {
-      this.consultaService
-        .cadastrar(this.consultaNova)
-        .subscribe({
-          next: () => {
-            this.carregarConsultas();
-            this.fecharFormulario();
-          },
-          error: (erro) => {
-
-          console.error(erro);
-
-          if (erro.error?.message) {
-            alert(erro.error.message);
-          } else {
-            alert('Não foi possível salvar a consulta.');
-          }
-
+      this.consultaService.cadastrar(dadosParaSalvar).subscribe({
+        next: () => { this.carregarConsultas(); this.fecharFormulario(); },
+        error: (erro) => {
+          if (erro.error?.message) alert(erro.error.message);
+          else alert('Não foi possível salvar a consulta.');
         }
-        });
+      });
     }
   }
 
-  editarConsulta(consulta: Consulta) {
-    this.mostrarFormulario = true;
+  editarConsulta(consulta: any) {
+    // Garante que todas as propriedades existam ao abrir para edição
     this.consultaNova = { 
       ...consulta,
-      paciente: consulta.paciente ? { ...consulta.paciente } : { id: null },
-      dentista: consulta.dentista ? { ...consulta.dentista } : { id: null }
+      paciente: consulta.paciente ? { id: consulta.paciente.id } : { id: null },
+      dentista: consulta.dentista ? { id: consulta.dentista.id } : { id: null },
+      especialidade: consulta.especialidade ? { id: consulta.especialidade.id } : { id: null }
     };
+
+    this.mostrarFormulario = true;
   }
 
   excluirConsulta(id: number) {
-    const confirmar = confirm('Tem certeza que deseja excluir esta consulta?');
-    if (!confirmar) return;
+    if (!confirm('Tem certeza que deseja excluir esta consulta?')) return;
 
     this.consultaService.excluir(id).subscribe({
       next: () => {
-        this.consultas = this.consultas.filter(consulta => consulta.id !== id);
+        this.consultas = this.consultas.filter(c => c.id !== id);
         this.atualizarIndicadores();
         this.cdr.detectChanges();
       },
-      error: (erro) => {
-        console.error('Erro ao excluir consulta', erro);
-      }
+      error: (erro) => console.error('Erro ao excluir consulta', erro)
     });
   }
 
@@ -239,15 +246,8 @@ carregarConsultas() {
   }
 
   calcularFimConsulta(): Date {
-
-  const inicio = new Date(
-    this.consultaNova.dataInicio
-  );
-
-  inicio.setMinutes(
-    inicio.getMinutes() + 15
-  );
-
-  return inicio;
-}
+    const inicio = new Date(this.consultaNova.dataInicio);
+    inicio.setMinutes(inicio.getMinutes() + 15);
+    return inicio;
+  }
 }

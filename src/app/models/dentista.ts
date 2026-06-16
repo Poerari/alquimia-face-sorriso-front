@@ -6,5 +6,5 @@ export interface Dentista {
   cro: string;
   email: string;
   ativo: boolean;
-  especialidades?: Especialidade[];
+  especialidades?: Array<{ id: number; nome: string }>;
 }
