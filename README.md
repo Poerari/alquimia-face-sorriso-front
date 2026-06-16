@@ -122,23 +122,54 @@ Pacientes → Novo paciente → Salvar → Lista atualizada
 
 ---
 
-# 📸 Evidências do sistema
-
-Adicionar capturas de tela das principais telas:
 
 
-<img src="docs/Tela_login.png" alt="Tela_Login" width="300">
+## Guia de Uso (Fluxo de Navegação)
 
+Para navegar pelo sistema, siga o fluxo padrão da aplicação:
+
+### 1. Autenticação
+Acesse a página inicial e realize o login utilizando suas credenciais para obter acesso ao sistema.
+<p align="center">
+  <img src="docs/Tela_login.png" alt="Tela_Login" width="300">
+</p>
+
+### 2. Visão Geral (Dashboard)
+Após o login, você será direcionado ao Dashboard, onde poderá visualizar os indicadores de totais de pacientes, dentistas e consultas marcadas.
+<p align="center">
 <img src="docs/Teladash.png" alt="Teladash" width="300">
+</p>
 
-<img src="docs/Telapacientes.png" alt="Telapacientes" width="300">
+### 3. Gerenciamento (CRUDs)
+Navegue pelo menu lateral para acessar os módulos de **Pacientes**, **Dentistas** ou **Especialidades** para cadastrar, listar, editar ou excluir registros.
+<p align="center">
+  <img src="docs/Telapacientes.png" alt="Telapacientes" width="300">
 
 <img src="docs/Teladentista.png" alt="Teladentista" width="300">
 
 <img src="docs/Telaespecialidas.png" alt="Telaespecialidas" width="300">
+</p>
 
-<img src="docs/Telarelatorios.png" alt="Telarelatorios" width="300">
+### 4. Agendamento de Consultas
+No módulo de Consultas, selecione o paciente, o profissional disponível, defina o horário e adicione a descrição para confirmar o agendamento.
+<p align="center">
+<img src="docs/Telaconsultas (2).png" alt="Telaconsultas (2)" width="300">
+</p>
 
+### 5. Emissão de Relatórios
+
+A página de relatórios permite buscar e filtrar o histórico de consultas de forma dinâmica. Você pode combinar filtros para refinar a busca conforme a necessidade da clínica.
+
+* **Filtros Disponíveis:**
+  * Por Paciente
+  * Por Dentista/Profissional
+  * Por Especialidade Odontológica
+  * Por Usuário (quem realizou o agendamento)
+  <p align="center">
+  <img src="docs/Telarelatorios.png" alt="Telarelatorios" width="300">
+  </p>
+
+---
 
 # 👩‍💻 Desenvolvedora 
 
