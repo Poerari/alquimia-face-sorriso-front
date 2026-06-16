@@ -1,94 +1,93 @@
-<div class="dashboard-container">
-  
-  <div class="coluna-esquerda">
+  <div class="dashboard-container">
     
-    <div class="card-saudacao">
-  <h2>{{ saudacao }}, {{ nomeUsuario }} 👋</h2>
-  <p>Hoje é {{ dataAtual }}</p>
-</div>
+    <div class="coluna-esquerda">
+      
+      <div class="card-saudacao">
+    <h2>{{ saudacao }}, {{ nomeUsuario }} 👋</h2>
+    <p>Hoje é {{ dataAtual }}</p>
+  </div>
 
-    <div class="cards">
-      <div class="card">
-        <h3>Consultas</h3>
-        <span>{{ totalConsultas }}</span>
+      <div class="cards">
+        <div class="card">
+          <h3>Consultas</h3>
+          <span>{{ totalConsultas }}</span>
+        </div>
+        <div class="card">
+          <h3>Pacientes</h3>
+          <span>{{ totalPacientes }}</span>
+        </div>
+        <div class="card">
+          <h3>Dentistas</h3>
+          <span>{{ totalDentistas }}</span>
+        </div>
+        <div class="card">
+          <h3>Especialidades</h3>
+          <span>{{ totalEspecialidades }}</span>
+        </div>
       </div>
-      <div class="card">
-        <h3>Pacientes</h3>
-        <span>{{ totalPacientes }}</span>
+
+      <div class="secao-dashboard">
+        <div class="cabecalho-secao">
+          <h2>Consultas Recentes</h2>
+        </div>
+
+        <div class="card-tabela">
+          <table>
+            <thead>
+              <tr>
+                <th>Paciente</th>
+                <th>Dentista</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let consulta of consultasRecentes">
+                
+                <td>{{ consulta.paciente?.nome || 'Não informado' }}</td>
+                <td>{{ consulta.dentista?.nome || 'Não informado' }}</td>
+                <td>
+                  <span [ngClass]="{
+                    'status-agendada': consulta.status === 'AGENDADA',
+                    'status-concluida': consulta.status === 'CONCLUIDA',
+                    'status-cancelada': consulta.status === 'CANCELADA',
+                    'status-atrasada': consulta.status === 'ATRASADA'
+                  }">
+                    {{ consulta.status }}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="consultasRecentes.length === 0">
+                <td colspan="4" style="text-align: center; padding: 20px; color: #718096;">
+                  Nenhuma consulta registrada para hoje.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="card">
-        <h3>Dentistas</h3>
-        <span>{{ totalDentistas }}</span>
-      </div>
-      <div class="card">
-        <h3>Especialidades</h3>
-        <span>{{ totalEspecialidades }}</span>
-      </div>
+
     </div>
 
-    <div class="secao-dashboard">
+    <div class="coluna-direita">
+      
+    <div class="card-grafico-redondo">
       <div class="cabecalho-secao">
-        <h2>Consultas Recentes</h2>
+        <h2>Especialidades Mais Agendadas</h2>
       </div>
+      <div style="position: relative; height: 190px; width: 100%;">
+        <canvas id="graficoEspecialidades"></canvas>
+      </div>
+    </div>
 
-      <div class="card-tabela">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Paciente</th>
-              <th>Dentista</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let consulta of consultasRecentes">
-              <td>{{ consulta.id }}</td>
-              <td>{{ consulta.paciente?.nome || 'Não informado' }}</td>
-              <td>{{ consulta.dentista?.nome || 'Não informado' }}</td>
-              <td>
-                <span [ngClass]="{
-                  'status-agendada': consulta.status === 'AGENDADA',
-                  'status-concluida': consulta.status === 'CONCLUIDA',
-                  'status-cancelada': consulta.status === 'CANCELADA',
-                  'status-atrasada': consulta.status === 'ATRASADA'
-                }">
-                  {{ consulta.status }}
-                </span>
-              </td>
-            </tr>
-            <tr *ngIf="consultasRecentes.length === 0">
-              <td colspan="4" style="text-align: center; padding: 20px; color: #718096;">
-                Nenhuma consulta registrada para hoje.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="card-grafico-linha">
+      <div class="cabecalho-secao">
+        <h2>Consultas por Status</h2>
+      </div>
+      <div class="container-do-grafico">
+        <canvas id="graficoStatus"></canvas>
       </div>
     </div>
 
   </div>
 
-  <div class="coluna-direita">
-    
-  <div class="card-grafico-redondo">
-    <div class="cabecalho-secao">
-      <h2>Especialidades Mais Agendadas</h2>
-    </div>
-    <div style="position: relative; height: 190px; width: 100%;">
-      <canvas id="graficoEspecialidades"></canvas>
-    </div>
   </div>
-
-  <div class="card-grafico-linha">
-    <div class="cabecalho-secao">
-      <h2>Consultas por Status</h2>
-    </div>
-    <div class="container-do-grafico">
-      <canvas id="graficoStatus"></canvas>
-    </div>
-  </div>
-
-</div>
-
-</div>

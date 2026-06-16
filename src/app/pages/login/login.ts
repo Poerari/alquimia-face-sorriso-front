@@ -27,23 +27,36 @@ export class Login {
     private router: Router
   ) {}
 
-  entrar() {
-    this.erro = '';
+entrar() {
 
-    // Criamos o objeto baseado na interface antes de enviar
-    const dados: LoginRequest = {
-      email: this.email,
-      senha: this.senha
-    };
+  this.erro = '';
 
-    this.authService.login(dados).subscribe({
-      next: (usuario) => {
-        localStorage.setItem('usuario', JSON.stringify(usuario));
-        this.router.navigate(['/dashboard']);
-      },
-      error: () => {
-        this.erro = 'Email ou senha inválidos';
-      }
-    });
-  }
+  const dados: LoginRequest = {
+    email: this.email,
+    senha: this.senha
+  };
+
+  this.authService.login(dados).subscribe({
+
+    next: (resposta) => {
+      console.log('LOGIN COMPLETO');
+      console.log(resposta);
+      console.log('TOKEN:', resposta.token);
+      console.log('USUARIO:', resposta.usuario);
+
+      localStorage.setItem(
+      'usuario',
+      JSON.stringify(resposta)
+    );
+
+      this.router.navigate(['/dashboard']);
+    },
+
+    error: () => {
+      this.erro = 'E-mail ou senha inválidos.';
+    }
+
+  });
+
+}
 }

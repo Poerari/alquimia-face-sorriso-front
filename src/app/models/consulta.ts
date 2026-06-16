@@ -4,6 +4,7 @@ export interface Consulta {
   status: string;
   dataInicio: string;
   dataFim: string;
+  dataRegistro: string;
 
   paciente: {
     id: number;

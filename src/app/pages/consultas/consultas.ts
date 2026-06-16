@@ -69,7 +69,7 @@ export class Consultas implements OnInit {
       next: (dados) => { this.pacientes = dados; }
     });
 
-    // Carrega a lista global de especialidades logo no início
+    
     this.especialidadeService.listar().subscribe({
       next: (dados) => { this.especialidades = dados; },
       error: (erro) => console.error('Erro ao listar especialidades', erro)
@@ -88,16 +88,25 @@ export class Consultas implements OnInit {
     });
   }
 
-  carregarPerfil() {
-    if (isPlatformBrowser(this.platformId)) {
-      const usuarioSalvo = localStorage.getItem('usuario');
-      if (usuarioSalvo) {
-        const usuario = JSON.parse(usuarioSalvo);
-        this.perfilUsuario = usuario.perfil;
-        this.nomeUsuarioLogado = usuario.nome; 
-      }
+ carregarPerfil() {
+  if (isPlatformBrowser(this.platformId)) {
+
+    const usuarioSalvo =
+      localStorage.getItem('usuario');
+
+    console.log('USUARIO SALVO:', usuarioSalvo);
+
+    if (usuarioSalvo) {
+
+      const usuario = JSON.parse(usuarioSalvo);
+
+      console.log('OBJETO USUARIO:', usuario);
+
+      this.perfilUsuario = usuario.perfil;
+      this.nomeUsuarioLogado = usuario.nome;
     }
   }
+}
 
   ehDentista(): boolean {
     return this.perfilUsuario === 'DENTISTA';
@@ -118,42 +127,96 @@ export class Consultas implements OnInit {
     }
   }
 
-  carregarConsultas() {
-    this.consultaService.listar().subscribe({
-      next: (dados) => {
-        console.log('Dados brutos recebidos do backend:', dados);
-        const dadosBrutos = dados || [];
+ carregarConsultas() {
+  this.consultaService.listar().subscribe({
+    next: (dados) => {
 
-        // 🚀 CRUZA OS DADOS: Se o Java não trouxe o campo '.nome', o Angular busca na lista global pelo ID
-        this.consultas = dadosBrutos.map((consulta: any) => {
-          if (consulta.especialidade?.id && !consulta.especialidade.nome) {
-            const correspondente = this.especialidades.find(e => e.id === Number(consulta.especialidade.id));
-            if (correspondente) {
-              consulta.especialidade = { ...correspondente };
-            }
-          }
-          return consulta;
-        });
+      console.log('Dados brutos recebidos do backend:', dados);
+      console.log('USUÁRIO LOGADO:', this.nomeUsuarioLogado);
 
-        this.consultas.sort((a, b) => {
-          return new Date(b.dataInicio).getTime() - new Date(a.dataInicio).getTime();
-        });
+      const dadosBrutos = dados || [];
 
-        this.atualizarIndicadores();
-        this.cdr.detectChanges();
-      },
-      error: (erro) => {
-        console.error('Erro de comunicação com o serviço de consultas:', erro);
+      let consultasFiltradas = dadosBrutos;
+
+      if (
+        this.perfilUsuario === 'DENTISTA' &&
+        this.nomeUsuarioLogado
+      ) {
+
+        const limparNome = (nome: string) =>
+          nome
+            .replace(/\./g, '')
+            .trim()
+            .toLowerCase();
+
+        consultasFiltradas = dadosBrutos.filter(
+          (consulta: any) =>
+            limparNome(consulta.dentista?.nome || '') ===
+            limparNome(this.nomeUsuarioLogado)
+        );
       }
-    });
-  }
 
-  onDentistaChange() {
-    // Não limpa mais a especialidade ao trocar de dentista
+      this.consultas = consultasFiltradas.map((consulta: any) => {
+
+        if (
+          consulta.especialidade?.id &&
+          !consulta.especialidade.nome
+        ) {
+
+          const correspondente =
+            this.especialidades.find(
+              e => e.id === Number(consulta.especialidade.id)
+            );
+
+          if (correspondente) {
+            consulta.especialidade = {
+              ...correspondente
+            };
+          }
+        }
+
+        return consulta;
+      });
+
+      this.consultas.sort((a: any, b: any) => {
+       return (
+          new Date(b.dataRegistro).getTime() -
+          new Date(a.dataRegistro).getTime()
+        );
+      });
+
+      this.atualizarIndicadores();
+      this.cdr.detectChanges();
+    },
+
+    error: (erro) => {
+      console.error(
+        'Erro de comunicação com o serviço de consultas:',
+        erro
+      );
+    }
+  });
+}
+
+onDentistaChange() {
+
+  const dentistaSelecionado = this.dentistas.find(
+    d => d.id === Number(this.consultaNova.dentista.id)
+  );
+
+  if (dentistaSelecionado) {
+
+    this.especialidades =
+      dentistaSelecionado.especialidades || [];
+
+    this.consultaNova.especialidade = {
+      id: null
+    };
   }
+}
 
   abrirFormulario() {
-    // Inicializa o objeto de forma limpa e explícita
+   
     this.consultaNova = {
       descricao: '',
       status: 'AGENDADA',

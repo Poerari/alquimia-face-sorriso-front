@@ -45,17 +45,23 @@ export class App implements OnInit {
     
   }
 
-  verificarDadosUsuario(): void {
-  if (isPlatformBrowser(this.platformId)) {
-    const dados = localStorage.getItem('usuario');
+ verificarDadosUsuario(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const dados = localStorage.getItem('usuario');
 
-    if (dados) {
-      this.usuarioLogado = JSON.parse(dados);
-    } else {
-      this.usuarioLogado = null;
+      
+      if (dados && dados !== 'undefined') {
+        try {
+          this.usuarioLogado = JSON.parse(dados);
+        } catch (e) {
+          console.error("Erro ao converter os dados do usuário:", e);
+          this.usuarioLogado = null;
+        }
+      } else {
+        this.usuarioLogado = null;
+      }
     }
   }
-}
 
 iniciarRelogio() {
     setInterval(() => {

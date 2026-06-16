@@ -9,48 +9,20 @@
     </p>
 
     <div class="filtros">
+    <input type="date" [(ngModel)]="dataInicial">
+    <input type="date" [(ngModel)]="dataFinal">
+    <select [(ngModel)]="statusFiltro">
+      <option value="">Todos os Status</option>
+      <option value="AGENDADA">Agendada</option>
+      <option value="CONCLUIDA">Concluída</option>
+      <option value="ATRASADA">Atrasada</option>
+      <option value="CANCELADA">Cancelada</option>
+    </select>
 
-      <input
-        type="date"
-        [(ngModel)]="dataInicial">
-
-      <input
-        type="date"
-        [(ngModel)]="dataFinal">
-
-      <select [(ngModel)]="statusFiltro">
-
-        <option value="">
-          Todos os Status
-        </option>
-
-        <option value="AGENDADA">
-          Agendada
-        </option>
-
-        <option value="CONCLUIDA">
-          Concluída
-        </option>
-
-        <option value="ATRASADA">
-          Atrasada
-        </option>
-
-        <option value="CANCELADA">
-          Cancelada
-        </option>
-
-      </select>
-
-      <button
-        class="btn-gerar"
-        (click)="gerarRelatorio()">
-
-        Gerar Relatório
-
+      <button class="btn-gerar" (click)="exportarPDF()">
+        Exportar PDF
       </button>
-
-    </div>
+</div>
 
   </div>
 
@@ -87,7 +59,6 @@
       <thead>
 
         <tr>
-          <th>ID</th>
           <th>Paciente</th>
           <th>Dentista</th>
           <th>Data</th>
@@ -102,7 +73,7 @@
 
           <tr>
 
-            <td>{{ consulta.id }}</td>
+            
 
             <td>{{ consulta.paciente?.nome }}</td>
 

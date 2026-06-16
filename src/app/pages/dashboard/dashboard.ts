@@ -57,57 +57,145 @@ export class Dashboard implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.definirSaudacao();
-    this.carregarTotais();
 
-    if (isPlatformBrowser(this.platformId)) {
-      // Tenta buscar o nome direto do localStorage ou sessionStorage
-      const usuarioObj = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
-      const nomeDireto = localStorage.getItem('nome') || sessionStorage.getItem('nome');
+  this.definirSaudacao();
+  this.carregarTotais();
 
-      if (usuarioObj) {
-        try {
-          // Se o dado foi salvo como um objeto JSON, extrai a propriedade do nome
-          const usuario = JSON.parse(usuarioObj);
-          this.nomeUsuario = usuario.nome || usuario.nomeUsuario || 'Usuário';
-        } catch (e) {
-          this.nomeUsuario = usuarioObj;
-        }
-      } else if (nomeDireto) {
-        
-        this.nomeUsuario = nomeDireto;
-      } else {
-        
-        this.nomeUsuario = 'Usuário';
+  if (isPlatformBrowser(this.platformId)) {
+
+    const usuarioObj =
+      localStorage.getItem('usuario') ||
+      sessionStorage.getItem('usuario');
+
+    const nomeDireto =
+      localStorage.getItem('nome') ||
+      sessionStorage.getItem('nome');
+
+    if (usuarioObj) {
+
+      try {
+
+        const usuario =
+          JSON.parse(usuarioObj);
+
+        this.nomeUsuario =
+          usuario.nome ||
+          usuario.nomeUsuario ||
+          'Usuário';
+
+      } catch {
+
+        this.nomeUsuario =
+          usuarioObj;
+
       }
+
+    } else if (nomeDireto) {
+
+      this.nomeUsuario =
+        nomeDireto;
+
+    } else {
+
+      this.nomeUsuario =
+        'Usuário';
+
     }
 
-    this.consultaService.listar().subscribe({
-      next: (dados) => {
-        if (dados) {
-          this.todasConsultas = dados;
-          this.totalConsultas = dados.length;
-          
-          this.consultasRecentes = dados.slice(0, 4);
-
-          this.gerarGraficoEspecialidades();
-          this.gerarGraficoStatus();
-
-          if (isPlatformBrowser(this.platformId)) {
-            setTimeout(() => {
-              this.criarGraficoEspecialidades();
-              this.criarGraficoStatus();
-              this.cdr.detectChanges();
-            }, 50);
-          }
-        }
-      },
-      error: (erro) => {
-        console.error('Erro ao carregar consultas', erro);
-      }
-    });
   }
 
+  this.consultaService.listar().subscribe({
+
+    next: (dados) => {
+
+      if (dados) {
+
+        let consultasFiltradas = [...dados];
+
+        const usuarioSalvo =
+          localStorage.getItem('usuario');
+
+        if (usuarioSalvo) {
+
+          const usuario =
+            JSON.parse(usuarioSalvo);
+
+          if (
+            usuario.perfil === 'DENTISTA'
+          ) {
+
+            const limparNome =
+              (nome: string) =>
+                nome
+                  .replace(/\./g, '')
+                  .trim()
+                  .toLowerCase();
+
+            consultasFiltradas =
+              consultasFiltradas.filter(
+                (consulta: any) =>
+                  limparNome(
+                    consulta.dentista?.nome || ''
+                  ) ===
+                  limparNome(
+                    usuario.nome
+                  )
+              );
+
+          }
+
+        }
+
+        consultasFiltradas.sort(
+          (a: any, b: any) =>
+            b.id - a.id
+        );
+
+        this.todasConsultas =
+          consultasFiltradas;
+
+        this.totalConsultas =
+          consultasFiltradas.length;
+
+        this.consultasRecentes =
+          consultasFiltradas.slice(0, 4);
+
+        this.gerarGraficoEspecialidades();
+        this.gerarGraficoStatus();
+
+        if (
+          isPlatformBrowser(
+            this.platformId
+          )
+        ) {
+
+          setTimeout(() => {
+
+            this.criarGraficoEspecialidades();
+            this.criarGraficoStatus();
+
+            this.cdr.detectChanges();
+
+          }, 50);
+
+        }
+
+      }
+
+    },
+
+    error: (erro) => {
+
+      console.error(
+        'Erro ao carregar consultas',
+        erro
+      );
+
+    }
+
+  });
+
+}
   ngOnDestroy(): void {
     if (this.graficoEspecialidades) {
       this.graficoEspecialidades.destroy();
@@ -117,22 +205,30 @@ export class Dashboard implements OnInit, OnDestroy {
     }
   }
 
-  gerarGraficoEspecialidades() {
-    const contador: { [key: string]: number } = {};
+ gerarGraficoEspecialidades() {
 
-    this.todasConsultas.forEach(consulta => {
-      if (consulta && consulta.dentista && Array.isArray(consulta.dentista.especialidades)) {
-        consulta.dentista.especialidades.forEach((esp: any) => {
-          if (esp && esp.nome) {
-            contador[esp.nome] = (contador[esp.nome] || 0) + 1;
-          }
-        });
-      }
-    });
+  const contador: { [key: string]: number } = {};
 
-    this.labelsEspecialidades = Object.keys(contador);
-    this.dadosEspecialidades = Object.values(contador);
-  }
+  this.todasConsultas.forEach((consulta: any) => {
+
+    const nomeEspecialidade =
+      consulta.especialidade?.nome;
+
+    if (nomeEspecialidade) {
+
+      contador[nomeEspecialidade] =
+        (contador[nomeEspecialidade] || 0) + 1;
+
+    }
+
+  });
+
+  this.labelsEspecialidades =
+    Object.keys(contador);
+
+  this.dadosEspecialidades =
+    Object.values(contador);
+}
    
   carregarTotais() {
     this.pacienteService.listar().subscribe({
