@@ -1,59 +1,184 @@
-# AlquimiaFaceSorrisoFront
+# 🦷 Alquimia Face Sorriso - Front-end
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.0.
+Sistema de gerenciamento para clínica odontológica, desenvolvido em **Angular**, com foco em organização de pacientes, dentistas, especialidades e consultas.
 
-## Development server
+---
 
-To start a local development server, run:
+#  Tecnologias utilizadas
+
+* Angular
+* TypeScript
+* HTML5 + CSS3
+* Consumo de API REST (Spring Boot)
+
+---
+
+#  Como executar o projeto
+
+## Pré-requisitos
+
+Antes de iniciar, você precisa ter instalado:
+
+* Node.js (versão LTS recomendada)
+* Angular CLI
+
+## Instalar Angular CLI (caso não tenha)
+
+```bash
+npm install -g @angular/cli
+```
+
+## Instalação do projeto
+
+### Clone o repositório
+
+```bash
+git clone https://github.com/Poerari/alquimia-face-sorriso-front.git
+```
+
+### Acesse a pasta do projeto
+
+```bash
+cd alquimia-face-sorriso-front
+```
+
+### Instale as dependências
+
+```bash
+npm install
+```
+
+## Executar o projeto
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+O sistema estará disponível em:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
+# Integração com o Backend
+
+Este projeto consome uma API desenvolvida em Spring Boot.
+
+##  URL da API
+
+```text
+http://localhost:8080
 ```
 
-## Building
+⚠️ O backend deve estar em execução para o sistema funcionar corretamente.
 
-To build the project run:
+---
 
-```bash
-ng build
+# Funcionalidades do sistema
+
+## 🏠 Dashboard
+
+* Visão geral do sistema
+* Total de pacientes, dentistas e consultas
+
+## 👤 Pacientes
+
+* Cadastro de pacientes
+* Listagem
+* Edição
+* Exclusão
+
+## 🦷 Dentistas
+
+* Cadastro de dentistas
+* Associação com especialidades
+* Gerenciamento
+
+## 🧩 Especialidades
+
+* Cadastro de especialidades odontológicas
+
+## 📅 Consultas
+
+* Agendamento de consultas
+* Seleção de paciente e dentista
+* Definição de data e horário
+
+---
+
+# Fluxo da aplicação
+
+```text
+Dashboard → Módulos → CRUD completo (Criar, Listar, Editar, Excluir)
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Exemplo:
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```text
+Pacientes → Novo paciente → Salvar → Lista atualizada
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
 
-```bash
-ng e2e
-```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Guia de Uso (Fluxo de Navegação)
 
-## Additional Resources
+Para navegar pelo sistema, siga o fluxo padrão da aplicação:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 1. Autenticação
+Acesse a página inicial e realize o login utilizando suas credenciais para obter acesso ao sistema.
+<p align="center">
+  <img src="docs/Tela_login.png" alt="Tela_Login" width="300">
+</p>
+
+### 2. Visão Geral (Dashboard)
+Após o login, você será direcionado ao Dashboard, onde poderá visualizar os indicadores de totais de pacientes, dentistas e consultas marcadas.
+<p align="center">
+<img src="docs/Teladash.png" alt="Teladash" width="300">
+</p>
+
+### 3. Gerenciamento (CRUDs)
+Navegue pelo menu lateral para acessar os módulos de **Pacientes**, **Dentistas** ou **Especialidades** para cadastrar, listar, editar ou excluir registros.
+<p align="center">
+  <img src="docs/Telapacientes.png" alt="Telapacientes" width="300">
+
+<img src="docs/Teladentista.png" alt="Teladentista" width="300">
+
+<img src="docs/Telaespecialidas.png" alt="Telaespecialidas" width="300">
+</p>
+
+### 4. Agendamento de Consultas
+No módulo de Consultas, selecione o paciente, o profissional disponível, defina o horário e adicione a descrição para confirmar o agendamento.
+<p align="center">
+<img src="docs/Telaconsultas (2).png" alt="Telaconsultas (2)" width="300">
+</p>
+
+### 5. Emissão de Relatórios
+
+A página de relatórios permite buscar e filtrar o histórico de consultas de forma dinâmica. Você pode combinar filtros para refinar a busca conforme a necessidade da clínica.
+
+* **Filtros Disponíveis:**
+  * Por Paciente
+  * Por Dentista/Profissional
+  * Por Especialidade Odontológica
+  * Por Usuário (quem realizou o agendamento)
+  <p align="center">
+  <img src="docs/Telarelatorios.png" alt="Telarelatorios" width="300">
+  </p>
+
+---
+
+# 👩‍💻 Desenvolvedora 
+
+Gabriela Poerari Baptista
+
+---
+
+# 📌 Observações finais
+
+* O sistema depende do backend rodando na porta 8080.
+* Sem o backend ativo, os dados não serão carregados.
+* Certifique-se de configurar corretamente a URL da API no Angular.
