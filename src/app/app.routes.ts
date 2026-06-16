@@ -81,10 +81,12 @@ export const routes: Routes = [
     data: { perfis: ['ADMIN'] }
   },
 
-  // Qualquer rota inválida
+  
   {
     path: '**',
     redirectTo: 'login'
   }
+
+  
 
 ];

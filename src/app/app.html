@@ -3,6 +3,7 @@
 
     <aside class="menu-lateral">
       <div class="logo-container">
+       <img src="/logo-sorriso.png" alt="Logo Alquimia" class="logo-imagem">
         <h1 class="logo">
           Alquimia
         </h1>
@@ -25,12 +26,10 @@
 
     <main class="conteudo-principal">
       <div class="topbar">
-        <input
-          type="text"
-          placeholder="Pesquisar..."
-          class="campo-busca"
-        />
-
+       <div class="info-topo">
+        <span class="dica">💡 {{ dicaDoDia }}</span>
+        <span class="horario">🕒 {{ horarioAtual }}</span>
+      </div>
         <div class="usuario" (click)="sair()" style="cursor: pointer;" title="Clique para sair">
           {{ usuarioLogado?.nome }} (Sair)
         </div>

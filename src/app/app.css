@@ -15,8 +15,11 @@
 }
 
 .logo-container {
-    margin-top: 25px;
+    padding-top: 20px; 
     margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 
 
@@ -25,9 +28,7 @@
 .logo {
 
     color: #FFF59D;
-
     font-size: 25px;
-
     font-weight: 700;
     text-align: center;
 
@@ -38,11 +39,17 @@
 .subtitulo-logo {
 
     color: #A0AEC0;
-
     font-size: 20px;
     text-align: center;
 
 
+}
+
+.logo-imagem {
+    width: 60px;         
+    height: auto;         
+    margin-bottom: 12px;  
+    object-fit: contain;
 }
 
 .container-principal {
@@ -54,34 +61,51 @@
 
 
 .menu-lateral {
-   width: 280px;
-
-    background: black;
-
+    width: 280px;
+    background: #0D0E11; 
     padding: 30px 20px;
-
     display: flex;
-
     flex-direction: column;
+    height: 100vh; 
+    box-sizing: border-box;
+
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
 }
 
 .menu-lateral a {
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: #A0AEC0;
+    padding: 14px 20px;
+    border-radius: 12px; 
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
 
-    margin-bottom: 10px;
-
+.menu-lateral a:hover {
+    color: #2D3748; 
+    background-color: rgba(255, 245, 157, 0.8);
 }
 
 a {
     text-decoration: none;
     color: #A0AEC0;
-    padding: 14px 20px;
     border-radius: 12px;
+    padding: 14px 20px;
     font-weight: 500;
 }
 
 a:hover {
     color: white;
     background-color: rgba(255, 255, 255, 0.05); 
+}
+
+.menu-lateral a.active {
+    background-color: #FFF59D; 
+    color: #2D3748 !important; 
+    font-weight: 700;
+    
 }
 
 .ativo {
@@ -109,20 +133,24 @@ a:hover {
     box-shadow: 0 4px 15px rgba(0,0,0,.08);
 }
 
-.campo-busca {
-
-    width: 600px;
-    max-width: 60%;
-    height: 42px;
-    padding: 0 15px;
-    border: 1px solid #E2E8F0;
-    border-radius: 10px;
-    outline: none;
+.info-topo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.85rem;
+  color: #555;
 }
 
+.dica {
+  font-style: italic;
+  color: #333;
+}
 
-.campo-busca:focus {
-    border-color: #FFF59D;
+.horario {
+  font-weight: 600;
+  color: #333;
+  border-left: 1px solid #ccc;
+  padding-left: 15px;
 }
 
 .usuario {

@@ -6,6 +6,7 @@ import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -17,6 +18,12 @@ import { filter } from 'rxjs/operators';
 export class App implements OnInit {
   usuarioLogado: any = null;
   naTelaDeLogin: boolean = true;
+  horarioAtual: string = '';
+  dicaDoDia: string = '';
+  
+  private dicas: string[] = [
+    "Dica: Um sorriso acolhedor é o melhor cartão de visitas da clínica.",
+    ];
 
   constructor(
   private router: Router,
@@ -29,8 +36,13 @@ export class App implements OnInit {
     this.verificarDadosUsuario();
   });
 }
+
+
   ngOnInit(): void {
     this.verificarDadosUsuario();
+    this.iniciarRelogio();
+    this.sortearDica();
+    
   }
 
   verificarDadosUsuario(): void {
@@ -45,6 +57,19 @@ export class App implements OnInit {
   }
 }
 
+iniciarRelogio() {
+    setInterval(() => {
+      this.horarioAtual = new Date().toLocaleTimeString('pt-BR', { 
+        hour: '2-digit', minute: '2-digit' 
+      });
+    }, 1000);
+  }
+
+  sortearDica() {
+    const indice = Math.floor(Math.random() * this.dicas.length);
+    this.dicaDoDia = this.dicas[indice];
+  }
+
   deveExibirPainel(): boolean {
     return this.usuarioLogado !== null && !this.naTelaDeLogin;
   }
@@ -58,3 +83,4 @@ export class App implements OnInit {
   this.router.navigate(['/login']);
 }
 }
+
