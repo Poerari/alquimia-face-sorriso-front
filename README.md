@@ -4,7 +4,7 @@ Sistema de gerenciamento para clínica odontológica, desenvolvido em **Angular*
 
 ---
 
-# 🚀 Tecnologias utilizadas
+#  Tecnologias utilizadas
 
 * Angular
 * TypeScript
@@ -13,7 +13,7 @@ Sistema de gerenciamento para clínica odontológica, desenvolvido em **Angular*
 
 ---
 
-# ⚙️ Como executar o projeto
+#  Como executar o projeto
 
 ## Pré-requisitos
 
